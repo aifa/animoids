@@ -1,3 +1,4 @@
+import argparse
 from openai import OpenAI
 import yaml
 from dotenv import load_dotenv
@@ -61,5 +62,9 @@ def submit_request(ipfs_url):
 
 if __name__ == "__main__":
     ipfs_url = "https://bafybeib76s7igm5ncpg3n3eno64bjhak62ua2gyqzdruaxvejngh4inxui.ipfs.w3s.link/Pope-Francis-Coat.jpg"
-    submit_request(ipfs_url)
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(description="Analyse an image and detect if it has been generated or modified by AI.")
+    parser.add_argument("--img_url", help="The URL of the image to be analyzed.")
+    args = parser.parse_args()
+    submit_request(args.img_url)
     
