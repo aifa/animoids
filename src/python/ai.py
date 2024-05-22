@@ -60,6 +60,6 @@ def submit_request(ipfs_url):
 
 
 if __name__ == "__main__":
-    ipfs_url = "https://bafybeiewtbig2gv4hzgwtnbdwozk66m5xs5qfgorzutuff34xfmu7kr3jm.ipfs.w3s.link/Girl-Isreal-Gaza-Conflict.jpg"
+    ipfs_url = "https://bafybeib76s7igm5ncpg3n3eno64bjhak62ua2gyqzdruaxvejngh4inxui.ipfs.w3s.link/Pope-Francis-Coat.jpg"
     submit_request(ipfs_url)
     
