@@ -55,14 +55,8 @@ def submit_request(ipfs_url):
     content = response.json()
 
     ai_response = content["choices"][0]["message"]["content"]
-    #summary = content["choices"][0]["message"]["content"]["summary"]
-    #result = content["choices"][0]["message"]["content"]["result"]
     print(ai_response)
-    #print(summary)
-    #print(result)
     return ai_response
-
-
 
 
 if __name__ == "__main__":
