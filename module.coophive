@@ -15,7 +15,7 @@
           "/src/python/ai.py",
           {{if .img_url}}{{.img_url}}{{else}}"Pass me an input called img_url, like hive run animoids:v0.1.0 --img_url=https://bafybeib76s7igm5ncpg3n3eno64bjhak62ua2gyqzdruaxvejngh4inxui.ipfs.w3s.link/Pope-Francis-Coat.jpg"{{end}}
         ],
-        "Image": "grycap/cowsay@sha256:fad516b39e3a587f33ce3dbbb1e646073ef35e0b696bcf9afb1a3e399ce2ab0b"
+        "Image": "aifa/animoids"
       },
       "Engine": "Docker",
       "Network": {
