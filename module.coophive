@@ -12,7 +12,7 @@
       },
       "Docker": {
         "Entrypoint": [
-          "/src/python/ai.py",
+          "./src/python/ai.py",
           {{if .img_url}}{{.img_url}}{{else}}"Pass me an input called img_url, like hive run animoids:v0.1.0 --img_url=https://bafybeib76s7igm5ncpg3n3eno64bjhak62ua2gyqzdruaxvejngh4inxui.ipfs.w3s.link/Pope-Francis-Coat.jpg"{{end}}
         ],
         "Image": "aifa/animoids:main"
