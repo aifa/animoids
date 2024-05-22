@@ -1,0 +1,17 @@
+.env
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Solidity
+*.solc
+*.abi
+*.bin
+*.swp
+
+# JavaScript
+node_modules/
+*.log
+*.json
