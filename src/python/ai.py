@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import os
 import requests
 import json
+import sys
 
 load_dotenv()
 
@@ -53,10 +54,29 @@ def submit_request(ipfs_url):
     }
 
     response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
-    content = response.json()
+    try:
+        content = response.json()
+        print(content, file=sys.stdout)
 
-    ai_response = content["choices"][0]["message"]["content"]
-    print(ai_response)
+        ai_response = content["choices"][0]["message"]["content"]
+        print(ai_response, file=sys.stdout)
+        # Convert the AI response to a JSON object
+        ai_response_json = json.loads(ai_response)
+        print(ai_response_json)
+        # Read the sha256 value from the JSON object
+        sha256 = ai_response_json["hash"]
+        print(f"SHA256: {sha256}")
+        output_folder = os.getenv("OUTPUT_DIR")
+        if output_folder:
+            output_file = os.path.join(output_folder, "response.txt")
+            with open(output_file, "w") as file:
+                file.write(ai_response)
+                print(f"Response saved to {output_file}")
+        else:
+            print("OUTPUT environment variable not defined. Response will not be saved.", file=sys.stderr)
+    except KeyError:
+        print("Error: Invalid response format.", file=sys.stderr)
+
     return ai_response
 
 
