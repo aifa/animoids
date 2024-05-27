@@ -1,0 +1,51 @@
+{
+    "machine": {
+        "gpu": 0,
+        "ram": 100,
+        "cpu": 1000
+    },
+    "job": {
+        "APIVersion": "V1beta1",
+        "Metadata": {
+            "CreatedAt": "0001-01-01T00:00:00Z",
+            "Requester": {}
+        },
+        "Spec": {
+            "Deal": {
+                "Concurrency": 1
+            },
+           "Docker": {
+                "Entrypoint": [
+                ],
+                "Image": "yfantisa/animoids:latest@sha256:7ed5340ee93884a27364847ef814aa49789c9996990a6473c0acb23529f4528a"
+            },
+            "Engine": "Docker",
+            "Language": {
+                "JobContext": {}
+            },
+            "Network": {
+                "Type": "None"
+            },
+            "PublisherSpec": {
+                "Type": "IPFS"
+            },
+            "Resources": {
+                "CPU": "3",
+                "Memory": "3gb",
+                "GPU": ""
+            },
+            "Timeout": 1800,
+            "Verifier": "Noop",
+            "Wasm": {
+                "EntryModule": {}
+            },
+            "outputs": [
+                {
+                    "Name": "outputs",
+                    "StorageSource": "IPFS",
+                    "path": "/outputs"
+                }
+            ]
+        }
+    }
+}
