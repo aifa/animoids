@@ -1,6 +1,6 @@
 [submodule "src/python/Deepfake-Detection"]
 	path = src/python/Deepfake-Detection
-	url = https://github.com/aifa/Deepfake-Detection
+	url = https://github.com/aifa/animoids-df
 
 [submodule "src/python/lilypad-module-ollama-pipeline"]
         path = src/python/lilypad-module-ollama-pipeline
