@@ -57,10 +57,10 @@ export default function FileUpload() {
       } else {
         setMessage('Error uploading file.');
       }*/
-
+      const cid:string = await uploadFileToIpfs(file);
       const formData = new FormData();
-      formData.append('file', file);
-      const test = fetch('/api/upload', {
+      formData.append('cid', cid);
+      const test = fetch('/api/inference', {
         method: 'POST',
         body: formData,
       });
