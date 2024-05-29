@@ -1,5 +1,6 @@
 export const runLlavaInference = async (imageFolderCid: string) => {
 
+    console.log("Running Llava Inference on CID: ", imageFolderCid);
     const response = await fetch(`http://js-cli-wrapper.lilypad.tech`,
         {
             method: 'POST',
@@ -10,7 +11,7 @@ export const runLlavaInference = async (imageFolderCid: string) => {
             body: JSON.stringify({
                 "pk": `${process.env.NEXT_PRIVATE_LILYPAD_KEY}`,
                 "module": "github.com/aifa/lilypad-module-ollama-pipeline:v0.0.11",
-                "inputs": "-i Prompt='Please describe the objects and people in this image. On a scale from 0 to 1, can you tell if this has been artificially modified or generated?' -i imgCid="+`${imageFolderCid}`,
+                "inputs": "-i Prompt='Describe what do you see in this picture. On a scale from 0 to 1, can you tell if this has been generated or modified by AI?' -i imgCid="+`${imageFolderCid}`,
                  "opts": { "stream": false}
             })
         }
