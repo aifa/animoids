@@ -3,7 +3,7 @@
 import { useWeb3Modal } from "@web3modal/wagmi/react"
 import { useAccount, useDisconnect } from "wagmi"
 
-export default function Custom(){
+export default function CustomConnect(){
   const { open } = useWeb3Modal()
   const { isConnected } = useAccount()
   const { disconnect } = useDisconnect()

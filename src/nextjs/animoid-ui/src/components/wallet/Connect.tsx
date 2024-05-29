@@ -1,5 +1,5 @@
 'use client'
 
-export default function Connect() {
+export default function CustomConnect() {
   return <w3m-button />
 }
