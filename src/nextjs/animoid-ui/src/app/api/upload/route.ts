@@ -1,4 +1,4 @@
-import { uploadFileWeb3 } from '@/lib/upload'
+import { uploadFileWeb3 } from '@/lib/ipfs'
 import { runLlavaInference } from '@/lib/inference'
 import { NextResponse } from 'next/server';
 
@@ -13,7 +13,7 @@ export async function POST(
   const outputFile = new File([buffer], file.name, { type: file.type, lastModified: file.lastModified});
 
   const output = await uploadFileWeb3(outputFile);
-  const inference = await runLlavaInference(output.toString());
+  const inference = await runLlavaInference(output.toString(), file.name, file.type);
   console.log(inference);
   return NextResponse.json({ status: "success" , message: "File uploaded successfully", file: file.name , type: file.type, output: output, inference: inference});
 }

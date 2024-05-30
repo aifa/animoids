@@ -4,8 +4,6 @@ import { Input } from "@/components/ui/input"
 import { CardContent, CardFooter, Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { JSX, SVGProps, useState } from "react"
-import axios from 'axios';
-import { uploadFileToIpfs } from "@/lib/upload"
 
 function FileIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
@@ -30,7 +28,7 @@ function FileIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
 export default function FileUpload() {
   const [file, setFile] = useState<File | null>(null);
   const [description, setDescription] = useState('');
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState<any>('');
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -49,21 +47,13 @@ export default function FileUpload() {
       return;
     }
     try {
-      /*
-      
-      const res = await uploadFileToIpfs(file)
-      if (res.data.Hash) {
-        setMessage(`File uploaded successfully: ${res.data.Hash}`);
-      } else {
-        setMessage('Error uploading file.');
-      }*/
-      const cid:string = await uploadFileToIpfs(file);
       const formData = new FormData();
-      formData.append('cid', cid);
-      const test = fetch('/api/inference', {
+      formData.append('file', file);
+      const result = await fetch('/api/inference', {
         method: 'POST',
         body: formData,
       });
+      setMessage(await result);
     } catch (error: any) {
       setMessage(`Error: ${error.message}`);
     }
@@ -89,6 +79,7 @@ export default function FileUpload() {
       <CardFooter>
         <Button size="lg" onClick={handleSubmit}>Upload</Button>
       </CardFooter>
+      {message && <div>{message}</div>}
     </Card>
   )
 }
