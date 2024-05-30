@@ -5,9 +5,5 @@ pragma solidity ^0.8.6;
 // it will call the IOnChainJobManager with it's job
 // which will end up with the resultsAdded function being called by the manager
 interface ICoopHiveJobClient {
-  function submitResults(
-    uint256 id,
-    string memory dealId,
-    string memory dataId
-  ) external;
+    function submitResults(uint256 id, string memory dealId, string memory dataId) external;
 }

@@ -9,9 +9,5 @@ import "./ICoopHiveJobClient.sol";
 // where the calling smart contract can decide if it wants to agree to a resource offer
 // and accept results
 interface ICoopHiveJobManager is ICoopHiveJobClient {
-  function runJob(
-    string memory module,
-    string[] memory inputs,
-    address payee
-  ) external returns (uint256);
+    function runJob(string memory module, string[] memory inputs, address payee) external returns (uint256);
 }
