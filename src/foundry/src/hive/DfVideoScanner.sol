@@ -16,7 +16,9 @@ contract DfVideoScanner is Ownable, Initializable, ICoopHiveJobClient {
 
     event JobCompleted(uint256 id, string dealId, string dataId);
 
-    constructor(address initialOwner) Ownable(initialOwner) {}
+    constructor(address _owner, address _jobManagerAddress) Ownable(_owner) {
+        initialize(_jobManagerAddress);
+    }
 
     function initialize(address _jobManagerAddress) public initializer {
         setJobManagerAddress(_jobManagerAddress);

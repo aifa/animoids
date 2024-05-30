@@ -1,21 +1,8 @@
-import { fetchFileContents, uploadQWithDirWrap } from "./ipfs";
+import { runVideoScanner } from "./chain/coophive/onchain_utils";
 
-export const runLlavaInference = async (imageCid: string, filename:string, filetype: string) => {
+export const runLlavaInference = async (dirCid: string) => {
 
-    console.log("Running Llava Inference on CID: ", imageCid);
-
-    const imageUrl:string = "https://"+`${imageCid}`+".ipfs.w3s.link";
-    console.log("Image URL: ", imageUrl);
-    //Prepare file data based on lilypad requirements.
-    const contents: Blob = await fetchFileContents(imageUrl);
-    console.log("Contents: ", contents);
-    console.log("Filename: ", filename);
-    console.log("Filetype: ", filetype);
-    const file = new File([contents], filename, {type: filetype});
-
-    const dirCid = await uploadQWithDirWrap(file, filename);
-
-    console.log("Dir CID: ", dirCid);
+    console.log("Running Llava Inference on CID: ", dirCid);
 
     const response = await fetch(`http://js-cli-wrapper.lilypad.tech`,
         {
@@ -38,5 +25,11 @@ export const runLlavaInference = async (imageCid: string, filename:string, filet
 }
 
 export const runDeepFakeVideoDetection = async (videoFolderCid: string) => {
-
+    try{
+        return await runVideoScanner(videoFolderCid);
+    }
+    catch  (error: any) {
+        console.error(`Error: ${error.message}`);
+        return error.message;
+    }
 }

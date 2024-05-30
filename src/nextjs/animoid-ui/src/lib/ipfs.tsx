@@ -7,13 +7,12 @@ import { AnyLink } from "@web3-storage/w3up-client/types";
  * @param file 
  * @returns 
  */
-export const uploadQWithDirWrap = async(blob: Blob, filename: string) =>{
+export const uploadQWithDirWrap = async(file: File) =>{
 
-    const outputFile:File = new File([blob], "upload/"+filename, { type: blob.type });
+    const outputFile:File = new File([await file.arrayBuffer()], "upload/"+file.name, { type: file.type });
 
-    const output = await lighthouse.uploadBuffer(blob, `${process.env.NEXT_PUBLIC_LIGHTHOUSE_API_KEY}`)
+    const output = await lighthouse.uploadBuffer(outputFile, `${process.env.NEXT_PUBLIC_LIGHTHOUSE_API_KEY}`)
 
-    console.log('File Status:', output.data)
     if (output.data) {
       const delimeter = '{"Name":"upload","Hash":"';
       
@@ -81,17 +80,17 @@ export async function fetchFileContents(url: string): Promise<Blob> {
 
 export async function fetchFileFromIPFS(cid:string, filePath:string) {
   // Initialize IPFS
-  const url = 'https://dweb.link/api/v0/';
+  const url = 'https://ipfs.io/ipfs/';
 
 
   // Construct the full path to the file in IPFS
   const fullPath = url+`${cid}/${filePath}`;
 
   const response = await fetch(url);
-  
-  // Concatenate all chunks and convert to a string
-  //const fileContent = uint8ArrayToString(uint8ArrayConcat(chunks));
 
+  if (!response.ok) {
+    throw new Error(`Failed to fetch content from IPFS. Status: ${response.status}`);
+  }
   return await response.arrayBuffer;
 }
 

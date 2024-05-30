@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input"
 import { CardContent, CardFooter, Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { JSX, SVGProps, useState } from "react"
+import { uploadQWithDirWrap } from "@/lib/ipfs"
 
 function FileIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
@@ -47,8 +48,13 @@ export default function FileUpload() {
       return;
     }
     try {
+
+      const cid = await uploadQWithDirWrap(file);
+
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('cid', cid);
+      formData.append('fileName', file.name);
+      formData.append('fileType', file.type);
       const result = await fetch('/api/inference', {
         method: 'POST',
         body: formData,
@@ -79,7 +85,7 @@ export default function FileUpload() {
       <CardFooter>
         <Button size="lg" onClick={handleSubmit}>Upload</Button>
       </CardFooter>
-      {message && <div>{message}</div>}
+      
     </Card>
   )
 }
