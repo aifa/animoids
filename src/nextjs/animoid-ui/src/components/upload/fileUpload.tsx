@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { JSX, SVGProps, useState } from "react"
 import { uploadQWithDirWrap } from "@/lib/ipfs"
 import { NextResponse } from "next/server"
+import Image from "next/image"
 
 
 export default function FileUpload() {
@@ -145,12 +146,12 @@ export default function FileUpload() {
           <div className="grid grid-cols-1 gap-4">
             {imagePreview && (
               <div className="relative aspect-square overflow-hidden rounded-lg">
-                <img src={imagePreview} alt="Uploaded Image" width={400} height={400} className="object-cover" />
+                <Image src={imagePreview.toString()} alt="Uploaded Image" width={400} height={400} className="object-cover" />
               </div>
             )}
             {videoPreview && (
               <div className="relative aspect-video overflow-hidden rounded-lg">
-                <video src={videoPreview} controls className="w-full h-full object-cover" />
+                <video src={videoPreview.toString()} controls className="w-full h-full object-cover" />
               </div>
             )}
           </div>     
