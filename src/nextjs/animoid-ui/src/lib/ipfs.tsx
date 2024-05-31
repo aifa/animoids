@@ -91,6 +91,18 @@ export async function fetchFileFromIPFS(cid:string, filePath:string) {
   if (!response.ok) {
     throw new Error(`Failed to fetch content from IPFS. Status: ${response.status}`);
   }
-  return await response.arrayBuffer;
+  return await response;
+}
+
+export async function fetchUrlFromIPFS(url:string, filePath:string) {
+  // Construct the full path to the file in IPFS
+  const fullPath = url+`/${filePath}`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch content from IPFS. Status: ${response.status}`);
+  }
+  return await response;
 }
 

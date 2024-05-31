@@ -30,6 +30,6 @@ export const runDeepFakeVideoDetection = async (videoFolderCid: string) => {
     }
     catch  (error: any) {
         console.error(`Error: ${error.message}`);
-        return error.message;
+        return error;
     }
 }

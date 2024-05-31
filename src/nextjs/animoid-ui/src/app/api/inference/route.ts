@@ -1,6 +1,6 @@
 import { runDeepFakeVideoDetection, runLlavaInference } from '@/lib/inference'
 import { NextResponse } from 'next/server';
-import { fetchFileFromIPFS } from '@/lib/ipfs';
+import { fetchFileFromIPFS, fetchUrlFromIPFS } from '@/lib/ipfs';
 
 export async function POST(
   req: Request
@@ -16,7 +16,8 @@ export async function POST(
     const inference = await runLlavaInference(dirCid);
     console.log(inference);
     try{
-      const result = await fetchFileFromIPFS(inference.cid, "outputs/response.json");
+      const result = await fetchUrlFromIPFS(inference.url, "outputs/response.json");
+      console.log(result.json());
       return NextResponse.json({ status: "success" , message: "we got inference", results: result});
     }catch (error: any) {
       console.error(`Error: ${error.message}`);
@@ -24,9 +25,16 @@ export async function POST(
     }
     
   }else if (fileType.includes("video")) {
-    const result = await runDeepFakeVideoDetection(dirCid);
-    console.log(result);
-    return NextResponse.json({ status: "success" , message: "we got inference", results: result});
+    const cid = await runDeepFakeVideoDetection(dirCid);
+    console.log(cid);
+    try{
+      const result = await fetchFileFromIPFS(cid, "outputs/results.csv");
+      console.log(await result.text());
+      return NextResponse.json({ status: "success" , message: "we got inference", results: result});
+    }catch (error: any) {
+      console.error(`Error: ${error.message}`);
+      return NextResponse.json({ status: "error", message: error.message });
+    }
   }
 
 }
