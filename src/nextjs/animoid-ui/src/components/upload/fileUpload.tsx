@@ -114,7 +114,7 @@ export default function FileUpload() {
 
   return (
     <div className="grid gap-4">
-    <Card className="w-full max-w-3xl">
+    <Card className="w-full max-w-3xl mx-auto">
       <CardHeader>
         <CardTitle></CardTitle>
         <CardDescription>Drag and drop or click to upload an image or video.</CardDescription>
@@ -149,12 +149,12 @@ export default function FileUpload() {
           </div>
           <div className="grid grid-cols-1 gap-4">
             {imagePreview && (
-              <div className="relative aspect-square overflow-hidden rounded-lg">
+              <div className="relative aspect-square overflow-hidden rounded-lg mx-auto">
                 <Image src={imagePreview.toString()} alt="Uploaded Image" width={400} height={400} className="object-cover" />
               </div>
             )}
             {videoPreview && (
-              <div className="relative aspect-video overflow-hidden rounded-lg">
+              <div className="relative aspect-video overflow-hidden rounded-lg mx-auto">
                 <video src={videoPreview.toString()} controls className="w-full h-full object-cover" />
               </div>
             )}
@@ -175,11 +175,9 @@ export default function FileUpload() {
       </CardFooter>
     </Card>
     {processResult && (
-      <Card className="w-full max-w-3xl">
+      <Card className="w-full max-w-3xl mx-auto relative">
         <CardHeader>
-          <div>
           <CardTitle>Results</CardTitle>
-          </div>
           </CardHeader>
         <CardContent>
           <p className="text-gray-500">{processResult}</p>
