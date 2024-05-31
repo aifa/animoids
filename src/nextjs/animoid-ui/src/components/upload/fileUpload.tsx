@@ -5,6 +5,7 @@ import { CardContent, CardFooter, Card, CardHeader, CardTitle, CardDescription }
 import { Button } from "@/components/ui/button"
 import { JSX, SVGProps, useState } from "react"
 import { uploadQWithDirWrap } from "@/lib/ipfs"
+import { NextResponse } from "next/server"
 
 
 export default function FileUpload() {
@@ -71,7 +72,7 @@ export default function FileUpload() {
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsProcessing(true)
+    setIsProcessing(true);
     setProcessResult("")
     if (!file) {
       setMessage('Please select a file.');
@@ -79,7 +80,7 @@ export default function FileUpload() {
       return;
     }
     await submitFile(file);
-    setIsProcessing(false)
+    setIsProcessing(false);
   };
 
   const submitFile = async (file: File) => {
@@ -94,16 +95,23 @@ export default function FileUpload() {
         method: 'POST',
         body: formData,
       });
-      setMessage(await result);
+      await result.json().then((data) => {
+        setProcessResult(data.message);
+      });
     } catch (error: any) {
-      setMessage(`Error: ${error.message}`);
+      setProcessResult(`Error: ${error.message}`);
     }
+    setIsProcessing(false);
+  }
+  const handleDismissResult = () => {
+    setProcessResult("")
   }
 
   return (
+    <div className="grid gap-4">
     <Card className="w-full max-w-3xl">
       <CardHeader>
-        <CardTitle>Upload File</CardTitle>
+        <CardTitle></CardTitle>
         <CardDescription>Drag and drop or click to upload an image or video.</CardDescription>
       </CardHeader>      
       <CardContent>
@@ -157,11 +165,33 @@ export default function FileUpload() {
                 isProcessing ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >
-              {isProcessing ? <div className="animate-pulse">Analysing</div> : "Process"}
+              {isProcessing ? <div className="animate-pulse">Analysing</div> : "Submit"}
         </Button>
       </CardFooter>
-      
     </Card>
+    {processResult && (
+      <Card className="w-full max-w-3xl">
+        <CardHeader>
+          <div>
+          <CardTitle>Results</CardTitle>
+          </div>
+          </CardHeader>
+        <CardContent>
+          <p className="text-gray-500">{processResult}</p>
+        </CardContent>
+        <CardFooter  className="flex justify-center">
+            <Button
+              variant="outline"
+              onClick={handleDismissResult}
+              className="rounded-full bg-blue-500 hover:bg-blue-600 text-white px-6 py-3"
+              >
+              <CrossIcon className="w-4 h-4 rotate-45 mr-2" />
+              Close
+            </Button>
+          </CardFooter>
+      </Card>
+    )}
+    </div>
   )
 }
 
@@ -202,6 +232,25 @@ function XIcon(props: any) {
     >
       <path d="M18 6 6 18" />
       <path d="m6 6 12 12" />
+    </svg>
+  )
+}
+
+function CrossIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M11 2a2 2 0 0 0-2 2v5H4a2 2 0 0 0-2 2v2c0 1.1.9 2 2 2h5v5c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-5h5a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-5V4a2 2 0 0 0-2-2h-2z" />
     </svg>
   )
 }

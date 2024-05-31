@@ -21,6 +21,9 @@ export async function POST(
     console.log(lavaResults);
     try{
       await pause(5000);
+      try{
+        await fetchUrlFromIPFS(lavaResults.url, "");
+      }catch(e){}
       const result = await fetchUrlFromIPFS(lavaResults.url, "outputs/response.json");
       const assessment = await result.text();
       console.log(assessment);
@@ -36,6 +39,11 @@ export async function POST(
     try{
       // pause here to let ipfs settle 
       await pause(5000);
+      //call twice to avoid retrieval errors
+      try{
+        await fetchFileFromIPFS(cid, "");
+      }catch(e){}
+
       const result = await fetchFileFromIPFS(cid, "outputs/results.csv");
       const assessment = await result.text();
       console.log(assessment);
