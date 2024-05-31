@@ -1,6 +1,7 @@
 import { runDeepFakeVideoDetection, runLlavaInference } from '@/lib/inference'
 import { NextResponse } from 'next/server';
 import { fetchFileFromIPFS, fetchUrlFromIPFS } from '@/lib/ipfs';
+import { pause } from '@/lib/utils';
 
 export async function POST(
   req: Request
@@ -12,25 +13,33 @@ export async function POST(
   const fileType = formData.get("fileType") as string;
 
   console.log(`fileType: ${fileType}`);
-  if (fileType.includes("image")) {
-    const inference = await runLlavaInference(dirCid);
-    console.log(inference);
+  const isImage = fileType.includes("image");
+  const isVideo = fileType.includes("video");
+
+  if (isImage) { 
+    const lavaResults = await runLlavaInference(dirCid);
+    console.log(lavaResults);
     try{
-      const result = await fetchUrlFromIPFS(inference.url, "outputs/response.json");
-      console.log(result.json());
-      return NextResponse.json({ status: "success" , message: "we got inference", results: result});
+      await pause(5000);
+      const result = await fetchUrlFromIPFS(lavaResults.url, "outputs/response.json");
+      const assessment = await result.text();
+      console.log(assessment);
+      return NextResponse.json({ status: "success" , message: assessment, results: result});
     }catch (error: any) {
       console.error(`Error: ${error.message}`);
       return NextResponse.json({ status: "error", message: error.message });
     }
     
-  }else if (fileType.includes("video")) {
+  } else if (isVideo) {
     const cid = await runDeepFakeVideoDetection(dirCid);
     console.log(cid);
     try{
+      // pause here to let ipfs settle 
+      await pause(5000);
       const result = await fetchFileFromIPFS(cid, "outputs/results.csv");
-      console.log(await result.text());
-      return NextResponse.json({ status: "success" , message: "we got inference", results: result});
+      const assessment = await result.text();
+      console.log(assessment);
+      return NextResponse.json({ status: "success" , message: assessment, results: result});
     }catch (error: any) {
       console.error(`Error: ${error.message}`);
       return NextResponse.json({ status: "error", message: error.message });

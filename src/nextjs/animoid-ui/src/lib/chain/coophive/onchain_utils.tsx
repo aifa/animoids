@@ -2,14 +2,13 @@ import { ethers } from 'ethers';
 import DfVideoScannerABI from './abis/DfVideoScanner.json';
 import CoopHiveOnChainJobCreatorABI from './abis/CoopHiveOnChainJobCreator.json';
 import CoopHiveTokenABI from './abis/CoopHiveToken.json';
+import { pause } from '@/lib/utils';
 
 export const runVideoScanner = async (cid:string) => {
  // the private key of the person with tokens
  const privateKey = process.env.NEXT_PRIVATE_COOPHIVE_KEY;
  const url = process.env.NEXT_COOPHIVE_URL;
 
- console.log(`url: ${url}`)
- console.log(`privateKey: ${privateKey}`)
  const dfScannerAddress = '0x5fabacCA5Aff8C3952ccbe7964841a2f7803Fdd0';
  const jobCreatorAddress = '0x7c9fc08E744B17692Dc32628407016D1CBE0a44D';
  if(!privateKey) {
