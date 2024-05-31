@@ -41,6 +41,81 @@ export const uploadQWithDirWrap = async(file: File) =>{
     return null;
   }
 
+  export const uploadQWithDirWrapAPICall = async(file: File) =>{
+      const url = 'https://node.lighthouse.storage/api/v0/add';
+      console.log("Uploading file to IPFS using Lighthouse API...");
+      const formData2 = new FormData();
+      formData2.append('file', new File([await file.arrayBuffer()], "upload/"+file.name, { type: file.type }));
+      const output = await fetch(url, {
+
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_LIGHTHOUSE_API_KEY}`
+        },
+        body: formData2
+      });
+      const data = await output.text();
+      if (data) {
+        const delimeter = '{"Name":"upload","Hash":"';
+        
+        //split the result string by the delimeter
+        const parts = data.split(delimeter);
+        console.log("Parts:"+parts);
+        const filePart= parts[0];
+        // Find the starting position of the desired substring
+        const dirStartPos = data.indexOf(delimeter);
+  
+        // Extract the substring from the starting position to the end
+        const dirPart = data.substring(dirStartPos);
+        //console.log("Substring:"+dirPart);
+        //console.log('JSON:', JSON.parse(dirPart));
+        const dirCid = JSON.parse(dirPart);
+  
+        if (dirCid) {
+          const uploadHash = dirCid.Hash;
+          console.log(`Upload Hash: ${uploadHash}`);
+          return uploadHash;
+        }
+      } else {
+        console.error('Error uploading file.');
+      }
+      return null;
+  }
+
+
+  export const uploadBufferwithWrap = async(buffer: Buffer, name: string, fType: string) =>{
+
+    const outputFile:File = new File([buffer], "upload/"+name, { type: fType});
+
+    const output = await lighthouse.uploadBuffer(outputFile, `${process.env.NEXT_PUBLIC_LIGHTHOUSE_API_KEY}`)
+
+    if (output.data) {
+      const delimeter = '{"Name":"upload","Hash":"';
+      
+      //split the result string by the delimeter
+      const parts = output.data.split(delimeter);
+      //console.log("Parts:"+parts);
+      const filePart= parts[0];
+      // Find the starting position of the desired substring
+      const dirStartPos = output.data.indexOf(delimeter);
+
+      // Extract the substring from the starting position to the end
+      const dirPart = output.data.substring(dirStartPos);
+      //console.log("Substring:"+dirPart);
+      //console.log('JSON:', JSON.parse(dirPart));
+      const dirCid = JSON.parse(dirPart);
+
+      if (dirCid) {
+        const uploadHash = dirCid.Hash;
+        console.log(`Upload Hash: ${uploadHash}`);
+        return uploadHash;
+      }
+    } else {
+      console.error('Error uploading file.');
+    }
+    return null;
+  }
+
 export const uploadFileWeb3 = async(file: File):Promise<AnyLink> =>{
   const client = await create();
   const myAccount = await client.login('antonis@typesystem.xyz')
@@ -48,7 +123,7 @@ export const uploadFileWeb3 = async(file: File):Promise<AnyLink> =>{
   const files = [
     file
   ]
-  return await client.uploadFile(file);
+  return await client.uploadDirectory(files);
 }
 
 export async function downloadFromIPFS(cid: string): Promise<string> {
@@ -85,8 +160,8 @@ export async function fetchFileFromIPFS(cid:string, filePath:string) {
 
   // Construct the full path to the file in IPFS
   const fullPath = url+`${cid}/${filePath}`;
-  console.log(`fetching from: ${fullPath}`);
-  const response = await fetch(fullPath);
+
+  const response = await fetchWithRetry(fullPath, {}, 5, 1000);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch content from IPFS. Status: ${response.status}`);
@@ -97,12 +172,35 @@ export async function fetchFileFromIPFS(cid:string, filePath:string) {
 export async function fetchUrlFromIPFS(url:string, filePath:string) {
   // Construct the full path to the file in IPFS
   const fullPath = url+"/"+`${filePath}`;
-   console.log(`fetching from: ${fullPath}`);
-  const response = await fetch(fullPath);
-
+  const response = await fetchWithRetry(fullPath, {}, 5, 1000);
   if (!response.ok) {
     throw new Error(`Failed to fetch content from IPFS. Status: ${response.status}`);
   }
   return await response;
+}
+
+export async function fetchWithRetry(url: string, options: RequestInit, maxRetries: number, delay: number = 1000): Promise<Response> {
+  let attempts = 0;
+
+  while (attempts < maxRetries) {
+    try {
+      console.log(`Attempt ${attempts + 1}: Fetching ${url}`);
+      const response = await fetch(url, options);
+      if (response.status === 200) {
+        return response;
+      } else {
+        console.log(`Attempt ${attempts + 1} failed: ${response.status} ${response.statusText}`);
+      }
+    } catch (error: any) {
+      console.log(`Attempt ${attempts + 1} encountered an error: ${error.message}`);
+    }
+
+    attempts++;
+    if (attempts < maxRetries) {
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+
+  throw new Error(`Failed to fetch ${url} after ${maxRetries} attempts`);
 }
 

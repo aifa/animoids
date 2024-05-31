@@ -1,16 +1,15 @@
 'use client'
-import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { CardContent, CardFooter, Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { JSX, SVGProps, useState } from "react"
+import { useState } from "react"
 import { uploadQWithDirWrap } from "@/lib/ipfs"
-import { NextResponse } from "next/server"
 import Image from "next/image"
 
 
 export default function FileUpload() {
   const [file, setFile] = useState<File | null>(null);
+  const [content, setContent] = useState<string | ArrayBuffer | null>('');
   const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | ArrayBuffer | null>(null);
   const [description, setDescription] = useState('');
@@ -86,15 +85,20 @@ export default function FileUpload() {
 
   const submitFile = async (file: File) => {
     try {
-      const cid = await uploadQWithDirWrap(file);
+      //const cid = await uploadQWithDirWrap(file);
 
       const formData = new FormData();
-      formData.append('cid', cid);
+      //formData.append('cid', cid);
+      formData.append('file', file);
       formData.append('fileName', file.name);
       formData.append('fileType', file.type);
+
+
       const result = await fetch('/api/inference', {
         method: 'POST',
         body: formData,
+        headers: {
+        }
       });
       await result.json().then((data) => {
         setProcessResult(data.message);

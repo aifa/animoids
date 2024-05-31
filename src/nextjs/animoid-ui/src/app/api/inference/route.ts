@@ -1,29 +1,25 @@
 import { runDeepFakeVideoDetection, runLlavaInference } from '@/lib/inference'
 import { NextResponse } from 'next/server';
-import { fetchFileFromIPFS, fetchUrlFromIPFS } from '@/lib/ipfs';
-import { pause } from '@/lib/utils';
+import { fetchFileFromIPFS, fetchUrlFromIPFS, fetchWithRetry, uploadBufferwithWrap, uploadFileWeb3, uploadQWithDirWrap, uploadQWithDirWrapAPICall } from '@/lib/ipfs';
 
 export async function POST(
   req: Request
 ) {
   const formData = await req.formData();
-
-  const dirCid = formData.get("cid") as string;
-  const fileNae = formData.get("fileName") as string;
+  const file = formData.get("file") as File;
+  //const dirCid = formData.get("cid") as string;
   const fileType = formData.get("fileType") as string;
 
-  console.log(`fileType: ${fileType}`);
   const isImage = fileType.includes("image");
   const isVideo = fileType.includes("video");
 
+
+  const dirCid = await uploadQWithDirWrapAPICall(file);
+  console.log(dirCid);
   if (isImage) { 
     const lavaResults = await runLlavaInference(dirCid);
     console.log(lavaResults);
     try{
-      await pause(5000);
-      try{
-        await fetchUrlFromIPFS(lavaResults.url, "");
-      }catch(e){}
       const result = await fetchUrlFromIPFS(lavaResults.url, "outputs/response.json");
       const assessment = await result.text();
       console.log(assessment);
@@ -37,13 +33,6 @@ export async function POST(
     const cid = await runDeepFakeVideoDetection(dirCid);
     console.log(cid);
     try{
-      // pause here to let ipfs settle 
-      await pause(5000);
-      //call twice to avoid retrieval errors
-      try{
-        await fetchFileFromIPFS(cid, "");
-      }catch(e){}
-
       const result = await fetchFileFromIPFS(cid, "outputs/results.csv");
       const assessment = await result.text();
       console.log(assessment);

@@ -13,7 +13,7 @@ export async function POST(
   const outputFile = new File([buffer], file.name, { type: file.type, lastModified: file.lastModified});
 
   const output = await uploadFileWeb3(outputFile);
-  const inference = await runLlavaInference(output.toString());
-  console.log(inference);
-  return NextResponse.json({ status: "success" , message: "File uploaded successfully", file: file.name , type: file.type, output: output, inference: inference});
+  //const inference = await runLlavaInference(output.toString());
+  //console.log(inference);
+  return NextResponse.json({ status: "success" , message: "File uploaded successfully", file: file.name , type: file.type, output: output});
 }
