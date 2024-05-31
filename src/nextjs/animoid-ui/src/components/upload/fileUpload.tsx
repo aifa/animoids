@@ -13,6 +13,8 @@ export default function FileUpload() {
   const [videoPreview, setVideoPreview] = useState<string | ArrayBuffer | null>(null);
   const [description, setDescription] = useState('');
   const [message, setMessage] = useState<any>('');
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [processResult, setProcessResult] = useState<string>("")
 
 
     const handleFileSelection = (selectedFile: File) => {
@@ -69,11 +71,15 @@ export default function FileUpload() {
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsProcessing(true)
+    setProcessResult("")
     if (!file) {
       setMessage('Please select a file.');
+      setIsProcessing(false);
       return;
     }
     await submitFile(file);
+    setIsProcessing(false)
   };
 
   const submitFile = async (file: File) => {
@@ -144,7 +150,15 @@ export default function FileUpload() {
       </CardContent>
 
       <CardFooter className="flex justify-center">
-        <Button size="lg" onClick={handleSubmit}>Scan</Button>
+      <Button
+              onClick={handleSubmit}
+              disabled={isProcessing}
+              className={`rounded-full bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 ${
+                isProcessing ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
+              {isProcessing ? <div className="animate-pulse">Analysing</div> : "Process"}
+        </Button>
       </CardFooter>
       
     </Card>
