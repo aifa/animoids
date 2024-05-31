@@ -183,10 +183,9 @@ export default function FileUpload() {
             <Button
               variant="outline"
               onClick={handleDismissResult}
-              className="rounded-full bg-blue-500 hover:bg-blue-600 text-white px-6 py-3"
+              className="rounded-full bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 hidden"
               >
               <CrossIcon className="w-4 h-4 rotate-45 mr-2" />
-              Close
             </Button>
           </CardFooter>
       </Card>
