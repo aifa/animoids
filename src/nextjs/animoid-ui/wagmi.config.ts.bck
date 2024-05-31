@@ -1,0 +1,18 @@
+import { defineConfig } from '@wagmi/cli'
+import {foundry} from '@wagmi/cli/plugins'
+import DfVideoScanner from '@/lib/chain/coophive/abis/DfVideoScanner.json';
+export default defineConfig({
+  contracts: [
+    {
+      name: 'DfVideoScanner',
+      abi: [{"type":"constructor","inputs":[{"name":"_owner","type":"address","internalType":"address"},{"name":"_jobManagerAddress","type":"address","internalType":"address"}],"stateMutability":"nonpayable"},{"type":"function","name":"getJobResult","inputs":[{"name":"_jobID","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"","type":"string","internalType":"string"}],"stateMutability":"view"},{"type":"function","name":"initialize","inputs":[{"name":"_jobManagerAddress","type":"address","internalType":"address"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"owner","inputs":[],"outputs":[{"name":"","type":"address","internalType":"address"}],"stateMutability":"view"},{"type":"function","name":"renounceOwnership","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"runVideoScanner","inputs":[{"name":"folderCID","type":"string","internalType":"string"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"setJobManagerAddress","inputs":[{"name":"_jobManagerAddress","type":"address","internalType":"address"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"submitResults","inputs":[{"name":"id","type":"uint256","internalType":"uint256"},{"name":"dealId","type":"string","internalType":"string"},{"name":"dataId","type":"string","internalType":"string"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"transferOwnership","inputs":[{"name":"newOwner","type":"address","internalType":"address"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"event","name":"Initialized","inputs":[{"name":"version","type":"uint64","indexed":false,"internalType":"uint64"}],"anonymous":false},{"type":"event","name":"JobCompleted","inputs":[{"name":"id","type":"uint256","indexed":false,"internalType":"uint256"},{"name":"dealId","type":"string","indexed":false,"internalType":"string"},{"name":"dataId","type":"string","indexed":false,"internalType":"string"}],"anonymous":false},{"type":"event","name":"JobCreated","inputs":[{"name":"id","type":"uint256","indexed":false,"internalType":"uint256"},{"name":"folderCID","type":"string","indexed":false,"internalType":"string"}],"anonymous":false},{"type":"event","name":"OwnershipTransferred","inputs":[{"name":"previousOwner","type":"address","indexed":true,"internalType":"address"},{"name":"newOwner","type":"address","indexed":true,"internalType":"address"}],"anonymous":false},{"type":"error","name":"InvalidInitialization","inputs":[]},{"type":"error","name":"NotInitializing","inputs":[]},{"type":"error","name":"OwnableInvalidOwner","inputs":[{"name":"owner","type":"address","internalType":"address"}]},{"type":"error","name":"OwnableUnauthorizedAccount","inputs":[{"name":"account","type":"address","internalType":"address"}]}],
+      address: '0x5fabacCA5Aff8C3952ccbe7964841a2f7803Fdd0'
+    },
+  ],
+  plugins: [    
+    foundry({
+      project: '../../foundry',
+      artifacts: 'out/',
+    })
+  ],
+})
