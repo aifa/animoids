@@ -10,14 +10,21 @@ export async function POST(
   const formData = await req.formData();
   const file = formData.get("file") as File;
   const fileType = formData.get("fileType") as string;
-  const isImage = fileType.includes("image");
-  const isVideo = fileType.includes("video");
+
 
   //Cid of wrapper directory of the file. Bachalau related ipfs inputs need to be wrapped in a directory.
   const dirCid = await uploadQWithDirWrapAPICall(file);
   //v1 Cid of the file , uploaded on web3.storage
   const v1Cid = await uploadFileWeb3(file);
 
+  
+  await runDetection(dirCid, v1Cid.toString(), fileType);
+
+}
+
+const runDetection = async (dirCid:string, v1Cid:string, fileType:string) => {
+  const isImage = fileType.includes("image");
+  const isVideo = fileType.includes("video");
   console.log(dirCid);
   if (isImage) { 
     const lavaResults = await runLlavaInference(dirCid);
@@ -31,7 +38,7 @@ export async function POST(
         }catch(e:any){
           console.error(`Error: ${e.message}`);
         }
-        const agentAsssessment = await submitAgentRequest(getWeb3StorageUrl(v1Cid.toString()), imagePrompt(assessment));
+        const agentAsssessment = await submitAgentRequest(getWeb3StorageUrl(v1Cid), imagePrompt(assessment));
 
       return NextResponse.json({ status: "success" , message: agentAsssessment, results: agentAsssessment});
     }catch (error: any) {
@@ -54,5 +61,4 @@ export async function POST(
       return NextResponse.json({ status: "error", message: error.message });
     }
   }
-
 }
