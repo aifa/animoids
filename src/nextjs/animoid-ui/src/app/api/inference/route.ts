@@ -46,7 +46,7 @@ export async function POST(
       console.log(assessment);
       const agentAsssessment = await submitAgentRequest(videoPlaceHolder, videoPrompt(assessment));
 
-      return NextResponse.json({ status: "success" , message: assessment, results: result});
+      return NextResponse.json({ status: "success" , message: agentAsssessment, results: result});
     }catch (error: any) {
       console.error(`Error: ${error.message}`);
       return NextResponse.json({ status: "error", message: error.message });

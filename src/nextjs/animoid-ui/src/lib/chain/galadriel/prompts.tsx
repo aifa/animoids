@@ -1,6 +1,6 @@
 import { getWeb3StorageUrl } from "@/lib/ipfs";
 
-export const videoPlaceHolder = getWeb3StorageUrl("bafkreidexlpxvk62boldbodqed73mck4xbmmzphwnm2vykvarmighfknhm");
+export const videoPlaceHolder = getWeb3StorageUrl("bafkreidhz6j4jdl6sgbg7s5jeu36eyvvwaih4pjzun4o2xbphbir63bf34");
 
 export const videoPrompt = (assessment: string):string =>{
     
