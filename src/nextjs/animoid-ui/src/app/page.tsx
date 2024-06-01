@@ -1,7 +1,3 @@
-import Title from "@/components/title";
-import FileUpload from "@/components/upload/fileUpload";
-
-
 export default function Home() {
  
   return (

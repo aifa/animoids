@@ -12,7 +12,7 @@ export default function Title() {
       }, 100)
       const titleAnimationInterval = setInterval(() => {
         setTitle((prevTitle) => {
-          const targetText = "Scan an image or video for signs of artificial manipulation"
+          const targetText = "Upload a file to scan for deepfake content."
           if (titleIndex < targetText.length) {
             setTitleIndex(titleIndex + 1)
             return targetText.slice(0, titleIndex + 1)
@@ -29,7 +29,7 @@ export default function Title() {
     }, [titleIndex])
 
     return (
-        <h1 className="text-2xl font-bold">
+        <h1 className="text-xl font-bold">
             {titleAnimation ? (
                 title
             ) : (

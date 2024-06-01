@@ -3,9 +3,7 @@ import { Input } from "@/components/ui/input"
 import { CardContent, CardFooter, Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
-import { uploadQWithDirWrap } from "@/lib/ipfs"
 import Image from "next/image"
-import Title from "../title"
 
 
 export default function FileUpload() {
@@ -114,7 +112,7 @@ export default function FileUpload() {
   return (
     
     <div className="grid gap-4">
-    <Card className="w-full max-w-3xl mx-auto">
+    <Card className="w-full max-w-3xl mx-auto mt-8">
       <CardHeader>
         <CardTitle></CardTitle>
         <CardDescription>Drag and drop or click to upload an image or video.</CardDescription>
