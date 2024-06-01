@@ -31,7 +31,7 @@ contract OpenAiChatGptVision {
         chatRunsCount = 0;
 
         config = IOracle.OpenAiRequest({
-            model : "gpt-4-turbo",
+            model : "gpt-4o",
             frequencyPenalty : 21, // > 20 for null
             logitBias : "", // empty str for null
             maxTokens : 1000, // 0 for null

@@ -18,9 +18,6 @@ export async function POST(
   //v1 Cid of the file , uploaded on web3.storage
   const v1Cid = await uploadFileWeb3(file);
 
-  const assessment = "filename,label zxvgazoudy.mp4,0.989";
-  const responce = await submitAgentRequest( videoPlaceHolder, videoPrompt(assessment));
-
   console.log(dirCid);
   if (isImage) { 
     const lavaResults = await runLlavaInference(dirCid);

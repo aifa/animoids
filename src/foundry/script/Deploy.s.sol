@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Script.sol";
-import "../src/galadriel/VisionAgent.sol";
+import "../src/galadriel/OpenAiChatGptVision.sol";
 
 contract Deploy is Script {
     error InvalidPrivateKey(string);
@@ -22,10 +22,10 @@ contract Deploy is Script {
         vm.startBroadcast(deployerPrivateKey);
         //DfVideoScanner dfVideoScanner =
          //   new DfVideoScanner(vm.addr(deployerPrivateKey), jobManagerAddress);
-        VisionAgent visionAgent = new VisionAgent(galadirielOracleAddress);
+        OpenAiChatGptVision openAiVision = new OpenAiChatGptVision(galadirielOracleAddress);
         console.logString(
             string.concat(
-                "visionAgent deployed at: ", vm.toString(address(visionAgent))
+                "openAiVision deployed at: ", vm.toString(address(openAiVision))
             )
         );
 
