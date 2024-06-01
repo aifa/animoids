@@ -87,6 +87,9 @@ export const uploadQWithDirWrap = async(file: File) =>{
 
     const outputFile:File = new File([buffer], "upload/"+name, { type: fType});
 
+    const apikey = process.env.NEXT_PUBLIC_LIGHTHOUSE_API_KEY;
+    if (!apikey) throw Error("Missing NEXT_PUBLIC_LIGHTHOUSE_API_KEY in .env")
+      
     const output = await lighthouse.uploadBuffer(outputFile, `${process.env.NEXT_PUBLIC_LIGHTHOUSE_API_KEY}`)
 
     if (output.data) {

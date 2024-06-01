@@ -33,7 +33,7 @@ export default function RootLayout({
         )}
       >
         <Header />
-        <Web3ModalProvider>{children}</Web3ModalProvider>
+        {children}
       </body>
     </html>
   );

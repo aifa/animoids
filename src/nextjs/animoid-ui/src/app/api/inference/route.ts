@@ -23,12 +23,17 @@ export async function POST(
     const lavaResults = await runLlavaInference(dirCid);
     console.log(lavaResults);
     try{
-      const result = await fetchUrlFromIPFS(lavaResults.url, "outputs/response.json");
-      const assessment = await result.text();
-      console.log(assessment);
-      const agentAsssessment = await submitAgentRequest(getWeb3StorageUrl(v1Cid.toString()), imagePrompt(assessment));
+      let assessment = "";
+      try{
+          const result = await fetchUrlFromIPFS(lavaResults.url, "outputs/response.json");
+          assessment = await result.text();
+          console.log(assessment);
+        }catch(e:any){
+          console.error(`Error: ${e.message}`);
+        }
+        const agentAsssessment = await submitAgentRequest(getWeb3StorageUrl(v1Cid.toString()), imagePrompt(assessment));
 
-      return NextResponse.json({ status: "success" , message: agentAsssessment, results: result});
+      return NextResponse.json({ status: "success" , message: agentAsssessment, results: agentAsssessment});
     }catch (error: any) {
       console.error(`Error: ${error.message}`);
       return NextResponse.json({ status: "error", message: error.message });

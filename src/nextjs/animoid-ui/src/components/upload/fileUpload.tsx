@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { uploadQWithDirWrap } from "@/lib/ipfs"
 import Image from "next/image"
+import Title from "../title"
 
 
 export default function FileUpload() {
@@ -16,7 +17,6 @@ export default function FileUpload() {
   const [message, setMessage] = useState<any>('');
   const [isProcessing, setIsProcessing] = useState(false)
   const [processResult, setProcessResult] = useState<string>("")
-
 
     const handleFileSelection = (selectedFile: File) => {
       setFile(selectedFile);
@@ -93,7 +93,6 @@ export default function FileUpload() {
       formData.append('fileName', file.name);
       formData.append('fileType', file.type);
 
-
       const result = await fetch('/api/inference', {
         method: 'POST',
         body: formData,
@@ -113,6 +112,7 @@ export default function FileUpload() {
   }
 
   return (
+    
     <div className="grid gap-4">
     <Card className="w-full max-w-3xl mx-auto">
       <CardHeader>
