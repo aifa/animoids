@@ -123,7 +123,7 @@ export const uploadFileWeb3 = async(file: File):Promise<AnyLink> =>{
   const files = [
     file
   ]
-  return await client.uploadDirectory(files);
+  return await client.uploadFile(file);
 }
 
 export async function downloadFromIPFS(cid: string): Promise<string> {
@@ -204,3 +204,6 @@ export async function fetchWithRetry(url: string, options: RequestInit, maxRetri
   throw new Error(`Failed to fetch ${url} after ${maxRetries} attempts`);
 }
 
+export function getWeb3StorageUrl(cid: string): string {
+  return `https://${cid}.ipfs.w3s.link`;
+}

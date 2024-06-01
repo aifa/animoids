@@ -18,7 +18,7 @@ contract VisionAgent {
     uint private requestsCount;
 
     address private owner;
-    address public oracleAddress;
+    address private oracleAddress;
 
     event OracleAddressUpdated(address indexed newOracleAddress);
     event ChatCreated(address indexed owner, uint indexed chatId);
@@ -31,20 +31,20 @@ contract VisionAgent {
             requestsCount = 0;
 
             config = IOracle.OpenAiRequest({
-                model : "gpt-4o",
-                frequencyPenalty : 21, // > 20 for null
+                model : "gpt-4-turbo",
+                frequencyPenalty : 0, // > 20 for null
                 logitBias : "", // empty str for null
-                maxTokens : 1000, // 0 for null
-                presencePenalty : 21, // > 20 for null
+                maxTokens : 1500, // 0 for null
+                presencePenalty : 0, // > 20 for null
                 responseFormat : "{\"type\":\"text\"}",
                 seed : 0, // null
                 stop : "", // null
-                temperature : 10, // Example temperature (scaled up, 10 means 1.0), > 20 means null
-                topP : 101, // Percentage 0-100, > 100 means null
+                temperature : 5, // Example temperature (scaled up, 10 means 1.0), > 20 means null
+                topP : 100, // Percentage 0-100, > 100 means null
                 tools : "",
                 toolChoice : "", // "none" or "auto"
                 user : "" // null
-                });
+            });
     }
 
     modifier onlyOwner() {
@@ -62,6 +62,40 @@ contract VisionAgent {
         emit OracleAddressUpdated(newOracleAddress);
     }
 
+    function getOracleAddress() public view returns (address) {
+        return oracleAddress;
+    }
+
+    function submitSingleImageRequest(string memory message, string memory imageUrl, string memory cid) public returns (uint i) {
+        Chat storage run = chatRequests[requestsCount];
+
+        run.owner = msg.sender;
+        run.cid = cid;
+        IOracle.Message memory newMessage = IOracle.Message({
+            role: "user",
+            content: new IOracle.Content[](1)
+        });
+        newMessage.content[0] = IOracle.Content({
+            contentType: "text",
+            value: message
+        });
+
+        newMessage.content[0] = IOracle.Content({
+            contentType: "image_url",
+            value: imageUrl
+        });
+
+        run.messages.push(newMessage);
+        run.messagesCount = 1;
+
+        uint currentId = requestsCount;
+        requestsCount = requestsCount + 1;
+
+        IOracle(oracleAddress).createOpenAiLlmCall(currentId, config);
+        emit ChatCreated(msg.sender, currentId);
+
+        return currentId;
+    }
 
     function submitRequest(string memory message, string[] memory imageUrls, string memory cid) public returns (uint i) {
         Chat storage run = chatRequests[requestsCount];
@@ -130,6 +164,10 @@ contract VisionAgent {
         return chatRequests[requestId].messages;
     }
     
+    function getConfig() public view returns (IOracle.OpenAiRequest memory) {
+        return config;
+    }
+
     function compareStrings(string memory a, string memory b) private pure returns (bool) {
         return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
     }
