@@ -17,9 +17,7 @@ export async function POST(
   //v1 Cid of the file , uploaded on web3.storage
   const v1Cid = await uploadFileWeb3(file);
 
-  
-  await runDetection(dirCid, v1Cid.toString(), fileType);
-
+  return await runDetection(dirCid, v1Cid.toString(), fileType);
 }
 
 const runDetection = async (dirCid:string, v1Cid:string, fileType:string) => {
@@ -30,15 +28,16 @@ const runDetection = async (dirCid:string, v1Cid:string, fileType:string) => {
     const lavaResults = await runLlavaInference(dirCid);
     console.log(lavaResults);
     try{
-      let assessment = "";
+     
+      let assessment: Record<string, any> = {};
       try{
           const result = await fetchUrlFromIPFS(lavaResults.url, "outputs/response.json");
-          assessment = await result.text();
+          assessment = await result.json();
           console.log(assessment);
         }catch(e:any){
           console.error(`Error: ${e.message}`);
         }
-        const agentAsssessment = await submitAgentRequest(getWeb3StorageUrl(v1Cid), imagePrompt(assessment));
+        const agentAsssessment = await submitAgentRequest(getWeb3StorageUrl(v1Cid), imagePrompt(assessment.response));
 
       return NextResponse.json({ status: "success" , message: agentAsssessment, results: agentAsssessment});
     }catch (error: any) {

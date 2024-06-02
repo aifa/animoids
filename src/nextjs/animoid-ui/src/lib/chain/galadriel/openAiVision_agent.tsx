@@ -42,7 +42,8 @@ export const submitAgentRequest = async (url:string, prompt: string) : Promise<s
     
       let allMessages: Message[] = []
       // Run the chat loop: read messages and send messages
-      while (true) {
+      let i:number = 0;
+      while (i<300) {
         const newMessages: Message[] = await getNewMessages(contract, chatId, allMessages.length);
         if (newMessages) {
           for (let message of newMessages) {
@@ -53,8 +54,10 @@ export const submitAgentRequest = async (url:string, prompt: string) : Promise<s
             } 
           }
         }
-        await new Promise(resolve => setTimeout(resolve, 2000))
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        i++;
       }
+      return "Error: service timed out ... try again later."
 }
 
 async function getNewMessages(

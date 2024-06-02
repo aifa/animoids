@@ -52,12 +52,13 @@ if(!receipt) throw new Error(`no receipt`)
  console.log(`Waiting for job to be completed...`)
 
  let result = ''
-
- while(!result) {
+ let i:number = 0;
+ while(!result && i < 300) {
    result = await dfContract.getJobResult(jobID)
    if(!result) {
     // Use JavaScript to wait or sleep for 1000 milliseconds
     await new Promise(resolve => setTimeout(resolve, 1000));
+    i++;
    }
    console.log(`waiting for job result: ${new Date().toLocaleString()}`)
  }
