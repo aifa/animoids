@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import { Inter as FontSans} from "next/font/google";
 import "./globals.css";
-import { cookieToInitialState } from 'wagmi';
 import Header from "./head";
 import { headers } from "next/headers";
-import Web3ModalProvider from "@/components/wallet/Web3ModalProvider";
-import { customConfig } from "@/components/wallet/wagmiConfig";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -24,7 +21,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const initialState = cookieToInitialState(customConfig, headers().get('cookie'))
   return (
     <html lang="en">
       <body  className={cn(
