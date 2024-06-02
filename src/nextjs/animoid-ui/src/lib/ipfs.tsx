@@ -50,7 +50,7 @@ export const uploadQWithDirWrap = async(file: File) =>{
 
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_LIGHTHOUSE_API_KEY}`
+          'Authorization': `Bearer ${process.env.NEXT_PRIVATE_LIGHTHOUSE_API_KEY}`
         },
         body: formData2
       });
@@ -87,10 +87,10 @@ export const uploadQWithDirWrap = async(file: File) =>{
 
     const outputFile:File = new File([buffer], "upload/"+name, { type: fType});
 
-    const apikey = process.env.NEXT_PUBLIC_LIGHTHOUSE_API_KEY;
-    if (!apikey) throw Error("Missing NEXT_PUBLIC_LIGHTHOUSE_API_KEY in .env")
+    const apikey = process.env.NEXT_PRIVATE_LIGHTHOUSE_API_KEY;
+    if (!apikey) throw Error("Missing NEXT_PRIVATE_LIGHTHOUSE_API_KEY in .env")
       
-    const output = await lighthouse.uploadBuffer(outputFile, `${process.env.NEXT_PUBLIC_LIGHTHOUSE_API_KEY}`)
+    const output = await lighthouse.uploadBuffer(outputFile, `${process.env.NEXT_PRIVATE_LIGHTHOUSE_API_KEY}`)
 
     if (output.data) {
       const delimeter = '{"Name":"upload","Hash":"';
