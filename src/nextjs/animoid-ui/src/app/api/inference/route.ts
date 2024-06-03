@@ -1,6 +1,6 @@
 import { runDeepFakeVideoDetection, runLlavaInference } from '@/lib/inference'
 import { NextResponse } from 'next/server';
-import { fetchFileFromIPFS, fetchUrlFromIPFS, fetchWithRetry, getWeb3StorageUrl, uploadBufferwithWrap, uploadFileWeb3, uploadQWithDirWrap, uploadQWithDirWrapAPICall } from '@/lib/ipfs';
+import { fetchFileFromIPFS, fetchUrlFromIPFS, getIpfsUrl, getWeb3StorageUrl, uploadFileWeb3, uploadQWithDirWrapAPICall } from '@/lib/ipfs';
 import { submitAgentRequest } from '@/lib/chain/galadriel/openAiVision_agent';
 import { imagePrompt, videoPlaceHolder, videoPrompt } from '@/lib/chain/galadriel/prompts';
 
@@ -14,13 +14,11 @@ export async function POST(
 
   //Cid of wrapper directory of the file. Bachalau related ipfs inputs need to be wrapped in a directory.
   const dirCid = await uploadQWithDirWrapAPICall(file);
-  //v1 Cid of the file , uploaded on web3.storage
-  const v1Cid = await uploadFileWeb3(file);
 
-  return await runDetection(dirCid, v1Cid.toString(), fileType);
+  return await runDetection(dirCid, file.name, fileType);
 }
 
-const runDetection = async (dirCid:string, v1Cid:string, fileType:string) => {
+const runDetection = async (dirCid:string, filePath:string, fileType:string) => {
   const isImage = fileType.includes("image");
   const isVideo = fileType.includes("video");
   console.log(dirCid);
@@ -37,7 +35,7 @@ const runDetection = async (dirCid:string, v1Cid:string, fileType:string) => {
         }catch(e:any){
           console.error(`Error: ${e.message}`);
         }
-        const agentAsssessment = await submitAgentRequest(getWeb3StorageUrl(v1Cid), imagePrompt(assessment.response));
+        const agentAsssessment = await submitAgentRequest(getIpfsUrl(dirCid, filePath), imagePrompt(assessment.response));
 
       return NextResponse.json({ status: "success" , message: agentAsssessment, results: agentAsssessment});
     }catch (error: any) {

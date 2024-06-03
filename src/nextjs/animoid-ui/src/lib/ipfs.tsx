@@ -1,7 +1,7 @@
 import lighthouse from "@lighthouse-web3/sdk"
 import { create } from '@web3-storage/w3up-client'
 import { AnyLink } from "@web3-storage/w3up-client/types";
-import { features } from "process";
+import { StoreMemory } from '@web3-storage/w3up-client/stores/memory'
 /**
  * Uploads a file to IPFS using the Lighthouse API, wraps it into a directory and returns the CID of the directory.
  * Uses IPVS V0. file format for compatibility with lilypad/bachalau ipfs input format.
@@ -120,8 +120,13 @@ export const uploadQWithDirWrap = async(file: File) =>{
   }
 
 export const uploadFileWeb3 = async(file: File):Promise<AnyLink> =>{
-  const client = await create();
+  console.log("Uploading file to IPFS using Web3.Storage...");
+  
+  const store = new StoreMemory();
+  const client = await create({store});
+  
   const myAccount = await client.login('antonis@typesystem.xyz')
+
   await client.setCurrentSpace('did:key:z6MkfTRbM5M3a7Ant6vK8JcBos21ai6pW2RiMVFUvXe6vCZF') 
   const files = [
     file
@@ -209,4 +214,9 @@ export async function fetchWithRetry(url: string, options: RequestInit, maxRetri
 
 export function getWeb3StorageUrl(cid: string): string {
   return `https://${cid}.ipfs.w3s.link`;
+}
+
+export function getIpfsUrl(dirId: string, filePath: string): string {
+  console.log(`https://ipfs.io/ipfs/${dirId}/${filePath}`);
+  return `https://ipfs.io/ipfs/${dirId}/${filePath}`;
 }
