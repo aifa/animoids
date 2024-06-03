@@ -74,7 +74,7 @@ async function runImageScan(dirCid: string): Promise<any> {
   console.log(lavaResults);
 
    
-    let assessment: Record<string, any> = {};
+    let assessment: Record<string, any> = {response: ""};
     try{
         const result = await fetchUrlFromIPFS(lavaResults.url, "outputs/response.json");
         assessment = await result.json();
@@ -82,4 +82,5 @@ async function runImageScan(dirCid: string): Promise<any> {
       }catch(e:any){
         console.error(`Error: ${e.message}`);
       }
+      return assessment;
 }
