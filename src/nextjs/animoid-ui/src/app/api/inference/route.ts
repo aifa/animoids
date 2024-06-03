@@ -4,6 +4,8 @@ import { fetchFileFromIPFS, fetchUrlFromIPFS, getWeb3StorageUrl, uploadFileWeb3,
 import { submitAgentRequest } from '@/lib/chain/galadriel/openAiVision_agent';
 import { imagePrompt, videoPlaceHolder, videoPrompt } from '@/lib/chain/galadriel/prompts';
 
+export const maxDuration = 300
+
 export async function POST(
   req: Request
 ) {

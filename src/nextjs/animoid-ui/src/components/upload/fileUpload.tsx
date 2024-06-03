@@ -30,7 +30,7 @@ export default function FileUpload() {
           setVideoPreview(reader.result);
           setImagePreview(null);
         };
-        reader.readAsDataURL(selectedFile);
+        //reader.readAsDataURL(selectedFile);
       } else {
         setImagePreview(null);
         setVideoPreview(null);
