@@ -2,6 +2,7 @@ import lighthouse from "@lighthouse-web3/sdk"
 import { create } from '@web3-storage/w3up-client'
 import { AnyLink } from "@web3-storage/w3up-client/types";
 import { StoreMemory } from '@web3-storage/w3up-client/stores/memory'
+
 /**
  * Uploads a file to IPFS using the Lighthouse API, wraps it into a directory and returns the CID of the directory.
  * Uses IPVS V0. file format for compatibility with lilypad/bachalau ipfs input format.
@@ -16,7 +17,7 @@ export const uploadQWithDirWrap = async(file: File) =>{
 
     if (output.data) {
       const delimeter = '{"Name":"upload","Hash":"';
-      
+    
       //split the result string by the delimeter
       const parts = output.data.split(delimeter);
       console.log("Parts:"+parts);

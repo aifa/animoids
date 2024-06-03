@@ -8,7 +8,6 @@ import Image from "next/image"
 
 export default function FileUpload() {
   const [file, setFile] = useState<File | null>(null);
-  const [content, setContent] = useState<string | ArrayBuffer | null>('');
   const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | ArrayBuffer | null>(null);
   const [description, setDescription] = useState('');
@@ -36,6 +35,7 @@ export default function FileUpload() {
         setImagePreview(null);
         setVideoPreview(null);
       }
+      setDescription('');
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,6 +50,7 @@ export default function FileUpload() {
     setFile(null)
     setImagePreview(null)
     setVideoPreview(null)
+    setDescription('')
   }
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescription(e.target.value);
@@ -83,10 +84,7 @@ export default function FileUpload() {
 
   const submitFile = async (file: File) => {
     try {
-      //const cid = await uploadQWithDirWrap(file);
-
       const formData = new FormData();
-      //formData.append('cid', cid);
       formData.append('file', file);
       formData.append('fileName', file.name);
       formData.append('fileType', file.type);
