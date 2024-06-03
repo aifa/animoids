@@ -99,7 +99,7 @@ export default function FileUpload() {
         setProcessResult(data.message);
       });
     } catch (error: any) {
-      setProcessResult(`Error: ${error.message}`);
+      setProcessResult(`An unexpected error occurred... Please try again later.`);
     }
     setIsProcessing(false);
   }
