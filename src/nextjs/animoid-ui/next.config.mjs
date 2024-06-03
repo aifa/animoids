@@ -4,8 +4,9 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-
-    serverExternalPackages: ['bls-eth-wasm'],
+    experimental: {
+        serverComponentsExternalPackages: ['bls-eth-wasm'],
+    }
 }
 export default nextConfig
  
