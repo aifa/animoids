@@ -4,10 +4,8 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-    future: {
-        webpack5: true,
-     },
 
+    serverExternalPackages: ['bls-eth-wasm'],
 }
 export default nextConfig
  
