@@ -5,10 +5,7 @@ import { submitAgentRequest } from '@/lib/chain/galadriel/openAiVision_agent';
 import { imagePrompt, videoPlaceHolder, videoPrompt } from '@/lib/chain/galadriel/prompts';
 
 // This function can run for a maximum of 5 seconds
-export const config = {
-  maxDuration: 300,
-};
-
+export const maxDuration = 5
 
 export async function POST(
   req: Request
