@@ -25,7 +25,7 @@ const runDetection = async (dirCid:string, v1Cid:string, fileType:string) => {
   const isImage = fileType.includes("image");
   const isVideo = fileType.includes("video");
 
-  const GTP4OnlyFlag = process.env.GTP4_ONLY;
+  const GTP4OnlyFlag = process.env.NEXT_PRIVATE_GPT4_ONLY;
   if (!GTP4OnlyFlag) {
     console.error("Missing GTP4_ONLY in .env");
     return NextResponse.json({ status: 500, message: "Internal Server Error" });
