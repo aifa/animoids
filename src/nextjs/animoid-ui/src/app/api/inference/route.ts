@@ -13,7 +13,8 @@ export async function POST(
   const file = formData.get("file") as File;
   const fileType = formData.get("fileType") as string;
 
-  //Cid of wrapper directory of the file. Bachalau related ipfs inputs need to be wrapped in a directory.
+
+  //Cid of wrapper directory of the file. Bachalau related ipfs inputs need to be wrapped in a v0 directory.
   const dirCid = await uploadQWithDirWrapAPICall(file);
   //v1 Cid of the file , uploaded on web3.storage
   const v1Cid = await uploadFileWeb3(file);

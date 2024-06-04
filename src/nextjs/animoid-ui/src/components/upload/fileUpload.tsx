@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import Image from "next/image"
 
-
 export default function FileUpload() {
   const [file, setFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null>(null);
@@ -14,6 +13,7 @@ export default function FileUpload() {
   const [message, setMessage] = useState<any>('');
   const [isProcessing, setIsProcessing] = useState(false)
   const [processResult, setProcessResult] = useState<string>("")
+
 
     const handleFileSelection = (selectedFile: File) => {
       setFile(selectedFile);
@@ -134,7 +134,8 @@ export default function FileUpload() {
               ) : (
                 <>
                   <UploadIcon className="w-8 h-8 text-gray-500" />
-                  <p className="text-gray-500">Drop file here or click to upload</p>
+                  <p className="text-gray-500 justify-center">Drop file here or click to upload</p>
+                  <p className="text-gray-500 justify-center">(File size limit: 4.5MB)</p>
                 </>
               )}
             </label>

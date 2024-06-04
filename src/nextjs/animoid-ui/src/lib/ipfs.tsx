@@ -1,6 +1,6 @@
 import lighthouse from "@lighthouse-web3/sdk"
 import { create } from '@web3-storage/w3up-client'
-import { AnyLink } from "@web3-storage/w3up-client/types";
+import { AnyLink, Client } from "@web3-storage/w3up-client/types";
 import { StoreMemory } from '@web3-storage/w3up-client/stores/memory'
 
 /**
@@ -9,6 +9,10 @@ import { StoreMemory } from '@web3-storage/w3up-client/stores/memory'
  * @param file 
  * @returns 
  */
+
+const store = new StoreMemory();
+const client =  create({ store }); // Declare the 'client' variable
+
 export const uploadQWithDirWrap = async(file: File) =>{
 
     const outputFile:File = new File([await file.arrayBuffer()], "upload/"+file.name, { type: file.type });
@@ -123,16 +127,14 @@ export const uploadQWithDirWrap = async(file: File) =>{
 export const uploadFileWeb3 = async(file: File):Promise<AnyLink> =>{
   console.log("Uploading file to IPFS using Web3.Storage...");
   
-  const store = new StoreMemory();
-  const client = await create({store});
-  
-  const myAccount = await client.login('antonis@typesystem.xyz')
-
-  await client.setCurrentSpace('did:key:z6MkfTRbM5M3a7Ant6vK8JcBos21ai6pW2RiMVFUvXe6vCZF') 
   const files = [
     file
   ]
-  return await client.uploadFile(file);
+  const clientLocal = await client;
+  const myAccount = await clientLocal.login('antonis@typesystem.xyz')
+
+  await clientLocal.setCurrentSpace('did:key:z6MkfTRbM5M3a7Ant6vK8JcBos21ai6pW2RiMVFUvXe6vCZF') 
+  return await clientLocal.uploadFile(file);
 }
 
 export async function downloadFromIPFS(cid: string): Promise<string> {
