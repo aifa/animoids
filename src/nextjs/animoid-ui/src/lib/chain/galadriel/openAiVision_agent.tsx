@@ -1,3 +1,4 @@
+'use server'
 import {Contract, ethers, TransactionReceipt, Wallet} from "ethers";
 import OpenAiChatGptVision from "./abis/OpenAiChatGptVision.json";
 

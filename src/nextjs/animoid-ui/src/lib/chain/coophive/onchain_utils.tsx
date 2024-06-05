@@ -1,3 +1,4 @@
+'use server'
 import { ethers } from 'ethers';
 import DfVideoScannerABI from './abis/DfVideoScanner.json';
 import CoopHiveOnChainJobCreatorABI from './abis/CoopHiveOnChainJobCreator.json';
