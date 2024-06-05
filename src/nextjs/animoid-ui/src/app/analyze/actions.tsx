@@ -8,6 +8,8 @@ import { fetchFileFromIPFS, fetchUrlFromIPFS, getWeb3StorageUrl } from "@/lib/ip
 import { uploadFile } from "@/lib/ipfs/web3storage";
 import { NextResponse } from "next/server";
 
+export const maxDuration = 300
+
 export default async function invokeDetection(formData: FormData) {
 
   const file = formData.get("file") as File;
