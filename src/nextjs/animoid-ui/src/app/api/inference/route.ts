@@ -1,8 +1,10 @@
-import { runDeepFakeVideoDetection, runLlavaInference } from '@/lib/inference'
 import { NextResponse } from 'next/server';
-import { fetchFileFromIPFS, fetchUrlFromIPFS, getWeb3StorageUrl, uploadFileWeb3, uploadQWithDirWrapAPICall } from '@/lib/ipfs';
 import { submitAgentRequest } from '@/lib/chain/galadriel/openAiVision_agent';
 import { imagePrompt, videoPlaceHolder, videoPrompt } from '@/lib/chain/galadriel/prompts';
+import { uploadFile } from '@/lib/ipfs/web3storage';
+import { uploadQWithDirWrapAPICall } from '@/lib/ipfs/lighthouse';
+import { fetchFileFromIPFS, fetchUrlFromIPFS, getWeb3StorageUrl } from '@/lib/ipfs/utils';
+import { runDeepFakeVideoDetection, runLlavaInference } from '@/lib/inference'
 
 export const maxDuration = 300
 
@@ -17,7 +19,7 @@ export async function POST(
   //Cid of wrapper directory of the file. Bachalau related ipfs inputs need to be wrapped in a v0 directory.
   const dirCid = await uploadQWithDirWrapAPICall(file);
   //v1 Cid of the file , uploaded on web3.storage
-  const v1Cid = await uploadFileWeb3(file);
+  const v1Cid = await uploadFile(file);
   console.log(v1Cid.toString());
   return await runDetection(dirCid, v1Cid.toString(), fileType);
 }

@@ -35,14 +35,25 @@ const controllerAddress = await jobCreator.getControllerAddress();
 
 console.log(`requiredDeposit: ${requiredDeposit}`)
 console.log(`tokenAddress: ${tokenAddress}`)
-const escrowPaid = await tokenContract.approve(controllerAddress, requiredDeposit);
+// Define gas price (in wei)
+const gasPrice = ethers.parseUnits('50', 'gwei');
+const nonce1 = await provider.getTransactionCount(wallet.address, 'latest');
+const escrowPaid = await tokenContract.approve(controllerAddress, requiredDeposit, {
+  nonce: nonce1,
+  gasPrice: gasPrice
+});
 
 console.log(escrowPaid)
-const runjobTx = await dfContract.runVideoScanner(cid);
-const receipt = await runjobTx.wait()
-if(!receipt) throw new Error(`no receipt`)
 
- console.log(`submitted job: ${runjobTx.hash}`)
+const nonce2 = await provider.getTransactionCount(wallet.address, 'latest');
+const runjobTx = await dfContract.runVideoScanner(cid,{
+  nonce: nonce2,
+  gasPrice: gasPrice
+});
+const receipt = await runjobTx.wait()
+if (!receipt) throw new Error(`no receipt`)
+console.log(receipt)
+console.log(`submitted job: ${runjobTx.hash}`)
  
  let jobID = 0
 

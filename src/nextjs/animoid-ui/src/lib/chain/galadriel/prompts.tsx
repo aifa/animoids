@@ -1,4 +1,4 @@
-import { getWeb3StorageUrl } from "@/lib/ipfs";
+import { getWeb3StorageUrl } from "@/lib/ipfs/utils";
 
 export const videoPlaceHolder = getWeb3StorageUrl("bafkreidhz6j4jdl6sgbg7s5jeu36eyvvwaih4pjzun4o2xbphbir63bf34");
 

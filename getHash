@@ -1,0 +1,14 @@
+# List all branches and their hashes on remote
+git ls-remote --head
+
+# List all tags and their hashes on a remote server
+git ls-remote -t
+
+# Get hash for a specific tag
+git rev-parse v1.1.0
+
+# Get last tag for current branch
+git describe --tags --abbrev=0
+
+# Get hash for last tag on current branch
+git rev-parse $(git describe --tags --abbrev=0)
