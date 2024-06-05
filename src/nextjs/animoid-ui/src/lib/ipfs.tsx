@@ -14,6 +14,7 @@ import { importDAG } from '@ucanto/core/delegation'
  * @returns 
  */
 
+const web3StorageClient = setWeb3StorageClient();
 
 export const uploadQWithDirWrap = async(file: File) =>{
 
@@ -132,22 +133,8 @@ export const uploadFileWeb3 = async(file: File):Promise<AnyLink> =>{
   const files = [
     file
   ]
-
-  const web3key = process.env.NEXT_PRIVATE_WEB3_STORAGE_KEY;
-  if (!web3key) throw Error("Missing NEXT_PRIVATE_WEB3_STORAGE_KEY in .env")
-  
-  const web3delegationProof = process.env.NEXT_PRIVATE_WEB3_STORAGE_PROOF;
-  if (!web3delegationProof) throw Error("Missing NEXT_PRIVATE_WEB3_STORAGE_PROOF in .env")
-
-  const principal = Signer.parse(web3key)
-  const store = new StoreMemory()
-  const client = await Client.create({ principal, store })
-  // Add proof that this agent has been delegated capabilities on the space
-  const proof: Delegation<Capabilities> = await parseProof(web3delegationProof) // Explicitly type the proof variable
-  const space = await client.addSpace(proof)
-  await client.setCurrentSpace(space.did())
-
-  return await client.uploadFile(file);
+  const localClient = await web3StorageClient;
+  return await localClient.uploadFile(file);
 }
 
 export async function downloadFromIPFS(cid: string): Promise<string> {
@@ -237,6 +224,23 @@ export function getIpfsUrl(dirId: string, filePath: string): string {
   return `https://ipfs.io/ipfs/${dirId}/${filePath}`;
 }
 
+async function setWeb3StorageClient() {
+    const web3key = process.env.NEXT_PRIVATE_WEB3_STORAGE_KEY;
+    if (!web3key) throw Error("Missing NEXT_PRIVATE_WEB3_STORAGE_KEY in .env")
+    
+    const web3delegationProof = process.env.NEXT_PRIVATE_WEB3_STORAGE_PROOF;
+    if (!web3delegationProof) throw Error("Missing NEXT_PRIVATE_WEB3_STORAGE_PROOF in .env")
+
+    const principal = Signer.parse(web3key)
+    const store = new StoreMemory()
+    const client = await Client.create({ principal, store })
+    // Add proof that this agent has been delegated capabilities on the space
+    const proof: Delegation<Capabilities> = await parseProof(web3delegationProof) // Explicitly type the proof variable
+    const space = await client.addSpace(proof)
+    client.setCurrentSpace(space.did())
+
+    return client;
+}
 /** @param {string} data Base64 encoded CAR file */
 async function parseProof (data: string): Promise< Delegation<Capabilities>> {
   const blocks: Block<unknown, number, number, 1>[] = [];
