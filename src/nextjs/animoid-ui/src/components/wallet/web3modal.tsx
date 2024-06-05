@@ -3,7 +3,7 @@
 import { createWeb3Modal, defaultConfig } from '@web3modal/ethers/react'
 
 // 1. Get projectId at https://cloud.walletconnect.com
-const projectId = 'YOUR_PROJECT_ID'
+const projectId = '8f0dd36b42b8cbbe07415c4540c18610'
 
 // 2. Set chains
 const mainnet = {
@@ -19,8 +19,8 @@ const arbitrum_sepolia = {
     chainId: 421614,
     name: 'Arbitrum Sepolia',
     currency: 'ETH',
-    explorerUrl: 'https://etherscan.io',
-    rpcUrl: 'https://sepolia-rollup.arbitrum.io/'
+    explorerUrl: 'https://sepolia.arbiscan.io',
+    rpcUrl: 'https://sepolia-rollup.arbitrum.io/rpc'
 }
 
 // 3. Create a metadata object
