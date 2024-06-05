@@ -8,7 +8,7 @@ import { fetchFileFromIPFS, fetchUrlFromIPFS, getWeb3StorageUrl } from "@/lib/ip
 import { uploadFile } from "@/lib/ipfs/web3storage";
 import { NextResponse } from "next/server";
 
-export default async function invokeDetection(formData: FormData) {
+export default async function invokeDetection(formData: FormData): Promise<string> {
 
   const file = formData.get("file") as File;
   const fileType = formData.get("fileType") as string;
@@ -19,14 +19,14 @@ export default async function invokeDetection(formData: FormData) {
 
 }
 
-const runDetection = async (dirCid:string, v1Cid:string, fileType:string) => {
+const runDetection = async (dirCid:string, v1Cid:string, fileType:string): Promise<string> => {
     const isImage = fileType.includes("image"); 
     const isVideo = fileType.includes("video");
   
     const GTP4OnlyFlag = process.env.GPT4_ONLY;
     if (!GTP4OnlyFlag) {
       console.error("Missing GTP4_ONLY in .env");
-      return NextResponse.json({ status: 500, message: "Internal Server Error" });
+      throw new Error("Missing GTP4_ONLY in .env");
     }
   
     if (isImage) { 
@@ -40,15 +40,15 @@ const runDetection = async (dirCid:string, v1Cid:string, fileType:string) => {
   
           const agentAsssessment = await submitAgentRequest(getWeb3StorageUrl(v1Cid), imagePrompt(llavaAssessment.response));
   
-        return NextResponse.json({ status: 200 , message: agentAsssessment, results: agentAsssessment});
+        return agentAsssessment;
       }catch (error: any) {
         console.error(`Error: ${error.message}`);
-        return NextResponse.json({ status: 500, message: error.message });
+        throw new Error(`Error: ${error.message}`);
       }
       
     } else if (isVideo) {
       if (GTP4OnlyFlag==="true") {
-        return NextResponse.json({ status: 200 , message: "Video processing is not available at the moment"});
+        throw new Error("Video processing is not available at the moment.");
       }
       
       const cid = await runDeepFakeVideoDetection(dirCid);
@@ -59,15 +59,16 @@ const runDetection = async (dirCid:string, v1Cid:string, fileType:string) => {
         console.log(assessment);
         const agentAsssessment = await submitAgentRequest(videoPlaceHolder, videoPrompt(assessment));
   
-        return NextResponse.json({ status: 200 , message: agentAsssessment, results: result});
+        return agentAsssessment;
       }catch (error: any) {
         console.error(`Error: ${error.message}`);
-        return NextResponse.json({ status: 500, message: error.message });
+        throw new Error(`Error: ${error.message}`);
       }
     }
+    throw new Error("Unsupported file type");
   }
   
-async function runImageScan(dirCid: string): Promise<any> {
+async function runImageScan(dirCid: string): Promise<string> {
     const lavaResults = await runLlavaInference(dirCid);
     console.log(lavaResults);
   
@@ -80,5 +81,5 @@ async function runImageScan(dirCid: string): Promise<any> {
         }catch(e:any){
           console.error(`Error: ${e.message}`);
         }
-        return assessment;
+        return JSON.stringify(assessment);
   }

@@ -97,15 +97,16 @@ export default function FileUpload() {
         }
       });*/
       const result = await invokeDetection(formData);
+      console.log(result);
 
       if (result==undefined) {
         setProcessResult("An unexpected error occurred... Please try again later.");
         return;
       }
-      await result.json().then((data) => {
-        setProcessResult(data.message);
-      });
+
+      setProcessResult(result);
     } catch (error: any) {
+      console.error(`Error: ${error.message}`);
       setProcessResult(`An unexpected error occurred... Please try again later.`);
     }
     setIsProcessing(false);
