@@ -18,7 +18,7 @@ const dfScannerAddress = '0x5fabacCA5Aff8C3952ccbe7964841a2f7803Fdd0';
 
  if(!privateKey) {
    console.error(`NEXT_PRIVATE_COOPHIVE_KEY env variable is required`)
-   process.exit(1)
+   throw new Error(`NEXT_PRIVATE_COOPHIVE_KEY env variable is required`)
  }
  //create a new ethers Json RPC provider
 const provider = new ethers.JsonRpcProvider(url)
