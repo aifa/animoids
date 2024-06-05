@@ -1,5 +1,5 @@
 'use client'
-import Title from "@/components/title";
+import Title from "@/components/ui/title";
 import FileUpload from "@/components/upload/fileUpload";
 
 

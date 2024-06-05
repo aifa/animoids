@@ -1,4 +1,5 @@
 
+import ConnectButton from "@/components/wallet/connectButton";
 import Head from "next/head";
 import Link from "next/link";
 
@@ -13,8 +14,11 @@ export default function Header() {
           <span className="text-lg font-bold">PXL - Deepfake detection</span>
           </Link>
           </h1>
+          <ConnectButton />
         </div>
+
       </header>
+      
       </>
     )
 };
