@@ -9,7 +9,7 @@ import { uploadFile } from "@/lib/ipfs/web3storage";
 import { NextResponse } from "next/server";
 
 export const config = {
-  maxDuration: 5,
+  maxDuration: 300,
 };
  
 
