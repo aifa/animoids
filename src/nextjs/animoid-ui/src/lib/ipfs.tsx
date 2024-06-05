@@ -232,7 +232,8 @@ async function setWeb3StorageClient() {
     if (!web3delegationProof) throw Error("Missing NEXT_PRIVATE_WEB3_STORAGE_PROOF in .env")
 
     const principal = Signer.parse(web3key)
-    const client = await Client.create({ principal, store: new StoreMemory()})
+    const store = new StoreMemory();
+    const client = await Client.create({ principal, store})
     // Add proof that this agent has been delegated capabilities on the space
     const proof: Delegation<Capabilities> = await parseProof(web3delegationProof) // Explicitly type the proof variable
     const space = await client.addSpace(proof)

@@ -11,6 +11,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.4.2
         version: 3.4.2(react-hook-form@7.51.5(react@18.3.1))
+      '@ipld/car':
+        specifier: ^5.3.1
+        version: 5.3.1
       '@lighthouse-web3/sdk':
         specifier: ^0.3.3
         version: 0.3.3
@@ -23,15 +26,21 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.40.0
         version: 5.40.0(react@18.3.1)
+      '@ucanto/core':
+        specifier: ^10.0.1
+        version: 10.0.1
+      '@ucanto/principal':
+        specifier: ^9.0.1
+        version: 9.0.1
+      '@web3-storage/access':
+        specifier: ^20.0.0
+        version: 20.0.0
       '@web3-storage/w3up-client':
         specifier: ^13.1.1
         version: 13.1.1(encoding@0.1.13)
       '@web3modal/ethers':
         specifier: ^4.2.3
         version: 4.2.3(@types/react@18.3.3)(encoding@0.1.13)(ethers@6.12.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      bls-eth-wasm:
-        specifier: ^1.2.1
-        version: 1.2.1
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -68,6 +77,9 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.3)
+      ucanto:
+        specifier: 0.1.0-beta
+        version: 0.1.0-beta
       viem:
         specifier: ^2.13.3
         version: 2.13.3(typescript@5.4.5)(zod@3.23.8)
@@ -304,9 +316,15 @@ packages:
   '@humanwhocodes/object-schema@2.0.3':
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
 
+  '@ipld/car@4.1.6':
+    resolution: {integrity: sha512-qs3Sco7rm1PRhhuGSWpCeayhqcB/0DOyIgBiqsfjV0mT0JbWs68Z+BTxksONlfindRXsM5llJOvZfAcuEJUqxw==}
+
   '@ipld/car@5.3.1':
     resolution: {integrity: sha512-8fNkYAZvL9yX2zesF32k7tYqUDGG41felmmBnwjCZJto06QXCb0NOMPJc/mhNgnVa5gkKqxPO1ZdSoHuaYcVSw==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
+
+  '@ipld/dag-cbor@7.0.3':
+    resolution: {integrity: sha512-1VVh2huHsuohdXC1bGJNE8WR72slZ9XE2T3wbBBq31dm7ZBatmKLLxrB+XAqafxfRFjv08RZmj/W/ZqaM13AuA==}
 
   '@ipld/dag-cbor@9.2.0':
     resolution: {integrity: sha512-N14oMy0q4gM6OuZkIpisKe0JBSjf1Jb39VI+7jMLiWX9124u1Z3Fdj/Tag1NA0cVxxqWDh0CqsjcVfOKtelPDA==}
@@ -316,9 +334,15 @@ packages:
     resolution: {integrity: sha512-P3LXQ1HhroyWxpQtI0vqLigM7QyLLS/pcApEz8c46VEOR1878n/ufy5eGlsG840RDm4RMIG2UWp6snuD+h/edQ==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
 
+  '@ipld/dag-json@8.0.11':
+    resolution: {integrity: sha512-Pea7JXeYHTWXRTIhBqBlhw7G53PJ7yta3G/sizGEZyzdeEwhZRr0od5IQ0r2ZxOt1Do+2czddjeEPp+YTxDwCA==}
+
   '@ipld/dag-pb@4.1.1':
     resolution: {integrity: sha512-wsSNjIvcABXuH9MKXpvRGMXsS20+Kf2Q0Hq2+2dxN6Wpw/K0kDF3nDmCnO6wlpninQ0vzx1zq54O3ttn5pTH9A==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
+
+  '@ipld/dag-ucan@1.2.3-beta':
+    resolution: {integrity: sha512-xQrtVEA0ZLSunQF8OXnoQdd800mT1b2QQ9AU0sqS36Guoh5A0tl/BgeKpEEZMwoiCKKwa/sx1TCeSFcIVJR3vA==}
 
   '@ipld/dag-ucan@3.4.0':
     resolution: {integrity: sha512-sW4R43w3DbEdoGWWJZCwsblwXa600HCanG9p2w1MJPVBNTNjhvqc3XI0uEqKhT2oqKWrND7uInVtcPmZme7hhA==}
@@ -923,6 +947,9 @@ packages:
   '@web3-storage/access@18.4.0':
     resolution: {integrity: sha512-EQQxSCip9FNgiNGwpKTnpff7/5A6MSn/Etf1Xpei3Au2oQkUe25DHwRJd/mbUzjnhcYh6UMGk2f0dIJ4Me00LA==}
 
+  '@web3-storage/access@20.0.0':
+    resolution: {integrity: sha512-kl2b3ZuN3NvAxDM6K8GlPgu1o67JtA3EGId8Bg+tFRqZiQlERQmMMOfLl8zKVOUvlq4bDFtWHl6EViLO4BwSJw==}
+
   '@web3-storage/capabilities@16.0.0':
     resolution: {integrity: sha512-wCjLpYc6t8tFRZrF2k2vBteJDWzHkmQjoJG0Yy/fjA04IjNN48iVZaCMQIANHXZxDGlYRGxhwzDwl4dovAdSTQ==}
 
@@ -1242,6 +1269,10 @@ packages:
 
   caniuse-lite@1.0.30001626:
     resolution: {integrity: sha512-JRW7kAH8PFJzoPCJhLSHgDgKg5348hsQ68aqb+slnzuB5QFERv846oA/mRChmlLAOdEDeOkRn3ynb1gSFnjt3w==}
+
+  cborg@1.10.2:
+    resolution: {integrity: sha512-b3tFPA9pUr2zCUiCfRd2+wok2/LBSNUMKOuRRok+WlvvAgEt/PlbgPTsZUcwCOs53IJvLgTp0eotwtosE6njug==}
+    hasBin: true
 
   cborg@4.2.0:
     resolution: {integrity: sha512-q6cFW5m3KxfP/9xGI3yGLaC1l5DP6DWM9IvjiJojnIwohL5CQDl02EXViPV852mOfQo+7PJGPN01MI87vFGzyA==}
@@ -3328,6 +3359,9 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  ucanto@0.1.0-beta:
+    resolution: {integrity: sha512-QCmMSyl+sGFPBVA+VgRQ0g97n+/W3rkt+F19ECNW9h11MRP0zBDjGzN79pwRLzxMJkahyt7PrsNFETcA6wTVLA==}
+
   ufo@1.5.3:
     resolution: {integrity: sha512-Y7HYmWaFwPUmkoQCUIAYpKqkOf+SbVj/2fJJZ4RJMCfZp0rTGwRbzQD+HghfnhKOjL9E01okqz+ncJskGYfBNw==}
 
@@ -3826,12 +3860,24 @@ snapshots:
 
   '@humanwhocodes/object-schema@2.0.3': {}
 
+  '@ipld/car@4.1.6':
+    dependencies:
+      '@ipld/dag-cbor': 7.0.3
+      cborg: 1.10.2
+      multiformats: 9.9.0
+      varint: 6.0.0
+
   '@ipld/car@5.3.1':
     dependencies:
       '@ipld/dag-cbor': 9.2.0
       cborg: 4.2.0
       multiformats: 13.1.1
       varint: 6.0.0
+
+  '@ipld/dag-cbor@7.0.3':
+    dependencies:
+      cborg: 1.10.2
+      multiformats: 9.9.0
 
   '@ipld/dag-cbor@9.2.0':
     dependencies:
@@ -3843,9 +3889,20 @@ snapshots:
       cborg: 4.2.0
       multiformats: 13.1.1
 
+  '@ipld/dag-json@8.0.11':
+    dependencies:
+      cborg: 1.10.2
+      multiformats: 9.9.0
+
   '@ipld/dag-pb@4.1.1':
     dependencies:
       multiformats: 13.1.1
+
+  '@ipld/dag-ucan@1.2.3-beta':
+    dependencies:
+      '@ipld/dag-cbor': 7.0.3
+      '@ipld/dag-json': 8.0.11
+      multiformats: 9.9.0
 
   '@ipld/dag-ucan@3.4.0':
     dependencies:
@@ -4394,7 +4451,7 @@ snapshots:
       '@ipld/dag-ucan': 3.4.0
       '@noble/curves': 1.2.0
       '@noble/ed25519': 1.7.3
-      '@noble/hashes': 1.3.2
+      '@noble/hashes': 1.4.0
       '@ucanto/interface': 10.0.1
       multiformats: 11.0.2
       one-webcrypto: 1.0.3
@@ -4800,6 +4857,27 @@ snapshots:
       tslib: 1.14.1
 
   '@web3-storage/access@18.4.0':
+    dependencies:
+      '@ipld/car': 5.3.1
+      '@ipld/dag-ucan': 3.4.0
+      '@scure/bip39': 1.3.0
+      '@ucanto/client': 9.0.1
+      '@ucanto/core': 10.0.1
+      '@ucanto/interface': 10.0.1
+      '@ucanto/principal': 9.0.1
+      '@ucanto/transport': 9.1.1
+      '@ucanto/validator': 9.0.2
+      '@web3-storage/capabilities': 17.1.1
+      '@web3-storage/did-mailto': 2.1.0
+      bigint-mod-arith: 3.3.1
+      conf: 11.0.2
+      multiformats: 12.1.3
+      one-webcrypto: https://codeload.github.com/web3-storage/one-webcrypto/tar.gz/5148cd14d5489a8ac4cd38223870e02db15a2382
+      p-defer: 4.0.1
+      type-fest: 4.18.3
+      uint8arrays: 4.0.10
+
+  '@web3-storage/access@20.0.0':
     dependencies:
       '@ipld/car': 5.3.1
       '@ipld/dag-ucan': 3.4.0
@@ -5322,6 +5400,8 @@ snapshots:
 
   caniuse-lite@1.0.30001626: {}
 
+  cborg@1.10.2: {}
+
   cborg@4.2.0: {}
 
   chalk@2.4.2:
@@ -5730,7 +5810,7 @@ snapshots:
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       eslint-plugin-jsx-a11y: 6.8.0(eslint@8.57.0)
       eslint-plugin-react: 7.34.2(eslint@8.57.0)
       eslint-plugin-react-hooks: 4.6.2(eslint@8.57.0)
@@ -5754,7 +5834,7 @@ snapshots:
       enhanced-resolve: 5.16.1
       eslint: 8.57.0
       eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.5
       is-core-module: 2.13.1
@@ -5776,7 +5856,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -7617,6 +7697,13 @@ snapshots:
       possible-typed-array-names: 1.0.0
 
   typescript@5.4.5: {}
+
+  ucanto@0.1.0-beta:
+    dependencies:
+      '@ipld/car': 4.1.6
+      '@ipld/dag-cbor': 7.0.3
+      '@ipld/dag-ucan': 1.2.3-beta
+      multiformats: 9.9.0
 
   ufo@1.5.3: {}
 

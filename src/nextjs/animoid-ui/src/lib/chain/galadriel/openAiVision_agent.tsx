@@ -1,6 +1,5 @@
 import {Contract, ethers, TransactionReceipt, Wallet} from "ethers";
 import OpenAiChatGptVision from "./abis/OpenAiChatGptVision.json";
-import * as readline from 'readline';
 
 interface Message {
     role: string,
