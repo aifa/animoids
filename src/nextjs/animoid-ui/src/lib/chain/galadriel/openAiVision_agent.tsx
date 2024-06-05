@@ -7,9 +7,6 @@ interface Message {
     content: string,
 }
 
-
-
-
 export const submitAgentRequest = async (url:string, prompt: string) : Promise<string> => {
     const privateKey = process.env.NEXT_GALADRIEL_KEY;
     if (!privateKey) throw Error("Missing PRIVATE_KEY in .env")

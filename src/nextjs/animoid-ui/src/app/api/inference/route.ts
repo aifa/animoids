@@ -18,7 +18,7 @@ export async function POST(
   const dirCid = await uploadQWithDirWrapAPICall(file);
   //v1 Cid of the file , uploaded on web3.storage
   const v1Cid = await uploadFileWeb3(file);
-
+  console.log(v1Cid);
   return await runDetection(dirCid, v1Cid.toString(), fileType);
 }
 

@@ -2,7 +2,7 @@ import lighthouse from "@lighthouse-web3/sdk"
 
 import * as Client from '@web3-storage/w3up-client'
 import { AnyLink, Block, Capabilities, Delegation } from "@web3-storage/w3up-client/types";
-import { StoreMemory } from '@web3-storage/w3up-client/stores/memory'
+import { StoreMemory } from '@web3-storage/access/stores/store-memory'
 import * as Signer from '@ucanto/principal/ed25519'
 import { CarReader } from '@ipld/car'
 import { importDAG } from '@ucanto/core/delegation'
@@ -232,8 +232,7 @@ async function setWeb3StorageClient() {
     if (!web3delegationProof) throw Error("Missing NEXT_PRIVATE_WEB3_STORAGE_PROOF in .env")
 
     const principal = Signer.parse(web3key)
-    const store = new StoreMemory()
-    const client = await Client.create({ principal, store })
+    const client = await Client.create({ principal, store: new StoreMemory()})
     // Add proof that this agent has been delegated capabilities on the space
     const proof: Delegation<Capabilities> = await parseProof(web3delegationProof) // Explicitly type the proof variable
     const space = await client.addSpace(proof)
