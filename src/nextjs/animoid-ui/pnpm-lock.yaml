@@ -41,6 +41,9 @@ importers:
       '@web3modal/ethers':
         specifier: ^4.2.3
         version: 4.2.3(@types/react@18.3.3)(encoding@0.1.13)(ethers@6.12.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      bls-eth-wasm:
+        specifier: ^1.2.1
+        version: 1.2.1
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -53,14 +56,17 @@ importers:
       lucide-react:
         specifier: ^0.379.0
         version: 0.379.0(react@18.3.1)
+      next:
+        specifier: 14.2.3
+        version: 14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       pino-pretty:
         specifier: ^11.1.0
         version: 11.1.0
       react:
-        specifier: ^18.3.1
+        specifier: ^18
         version: 18.3.1
       react-dom:
-        specifier: ^18.3.1
+        specifier: ^18
         version: 18.3.1(react@18.3.1)
       react-hook-form:
         specifier: ^7.51.5
@@ -105,9 +111,6 @@ importers:
       install:
         specifier: ^0.13.0
         version: 0.13.0
-      next:
-        specifier: ^14.2.3
-        version: 14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       postcss:
         specifier: ^8.4.38
         version: 8.4.38

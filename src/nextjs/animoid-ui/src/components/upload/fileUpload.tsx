@@ -4,6 +4,7 @@ import { CardContent, CardFooter, Card, CardHeader, CardTitle, CardDescription }
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import Image from "next/image"
+import invokeDetection from "@/app/analyze/actions"
 
 export default function FileUpload() {
   const [file, setFile] = useState<File | null>(null);
@@ -89,12 +90,18 @@ export default function FileUpload() {
       formData.append('fileName', file.name);
       formData.append('fileType', file.type);
 
-      const result = await fetch('/api/inference', {
+     /* const result = await fetch('/api/inference', {
         method: 'POST',
         body: formData,
         headers: {
         }
-      });
+      });*/
+      const result = await invokeDetection(formData);
+
+      if (result==undefined) {
+        setProcessResult("An unexpected error occurred... Please try again later.");
+        return;
+      }
       await result.json().then((data) => {
         setProcessResult(data.message);
       });

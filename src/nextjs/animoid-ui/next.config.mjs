@@ -1,8 +1,4 @@
-// @ts-check
- 
-/**
- * @type {import('next').NextConfig}
- */
+/** @type {import('next').NextConfig} */
 const nextConfig = {
     experimental: {
         serverComponentsExternalPackages: ['bls-eth-wasm'],
@@ -12,5 +8,4 @@ const nextConfig = {
         return config
     },
 }
-export default nextConfig
- 
+export default nextConfig;
