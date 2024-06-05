@@ -1,7 +1,10 @@
 import lighthouse from "@lighthouse-web3/sdk"
 import { create } from '@web3-storage/w3up-client'
-import { AnyLink, Client } from "@web3-storage/w3up-client/types";
+import { AnyLink, Block, Capabilities, Client, Delegation } from "@web3-storage/w3up-client/types";
 import { StoreMemory } from '@web3-storage/w3up-client/stores/memory'
+import * as Signer from '@ucanto/principal/ed25519'
+import { CarReader } from '@ipld/car'
+import { importDAG } from '@ucanto/core/delegation'
 
 /**
  * Uploads a file to IPFS using the Lighthouse API, wraps it into a directory and returns the CID of the directory.
@@ -10,8 +13,6 @@ import { StoreMemory } from '@web3-storage/w3up-client/stores/memory'
  * @returns 
  */
 
-const store = new StoreMemory();
-const client =  create({ store }); // Declare the 'client' variable
 
 export const uploadQWithDirWrap = async(file: File) =>{
 
@@ -130,11 +131,22 @@ export const uploadFileWeb3 = async(file: File):Promise<AnyLink> =>{
   const files = [
     file
   ]
-  const clientLocal = await client;
-  const myAccount = await clientLocal.login('antonis@typesystem.xyz')
 
-  await clientLocal.setCurrentSpace('did:key:z6MkfTRbM5M3a7Ant6vK8JcBos21ai6pW2RiMVFUvXe6vCZF') 
-  return await clientLocal.uploadFile(file);
+  const web3key = process.env.NEXT_PRIVATE_WEB3_STORAGE_KEY;
+  if (!web3key) throw Error("Missing NEXT_PRIVATE_WEB3_STORAGE_KEY in .env")
+  
+  const web3delegationProof = process.env.NEXT_PRIVATE_WEB3_STORAGE_PROOF;
+  if (!web3delegationProof) throw Error("Missing NEXT_PRIVATE_WEB3_STORAGE_PROOF in .env")
+
+  const principal = Signer.parse(web3key)
+  const store = new StoreMemory()
+  const client = await create({ principal, store })
+  // Add proof that this agent has been delegated capabilities on the space
+  const proof: Delegation<Capabilities> = await parseProof(web3delegationProof) // Explicitly type the proof variable
+  const space = await client.addSpace(proof)
+  await client.setCurrentSpace(space.did())
+
+  return await client.uploadFile(file);
 }
 
 export async function downloadFromIPFS(cid: string): Promise<string> {
@@ -222,4 +234,14 @@ export function getWeb3StorageUrl(cid: string): string {
 export function getIpfsUrl(dirId: string, filePath: string): string {
   console.log(`https://ipfs.io/ipfs/${dirId}/${filePath}`);
   return `https://ipfs.io/ipfs/${dirId}/${filePath}`;
+}
+
+/** @param {string} data Base64 encoded CAR file */
+async function parseProof (data: string): Promise< Delegation<Capabilities>> {
+  const blocks: Block<unknown, number, number, 1>[] = [];
+  const reader = await CarReader.fromBytes(Buffer.from(data, 'base64'));
+  for await (const block of reader.blocks()) {
+    blocks.push(block as Block<unknown, number, number, 1>);
+  }
+  return importDAG(blocks);
 }
