@@ -1,6 +1,7 @@
 import lighthouse from "@lighthouse-web3/sdk"
-import { create } from '@web3-storage/w3up-client'
-import { AnyLink, Block, Capabilities, Client, Delegation } from "@web3-storage/w3up-client/types";
+
+import * as Client from '@web3-storage/w3up-client'
+import { AnyLink, Block, Capabilities, Delegation } from "@web3-storage/w3up-client/types";
 import { StoreMemory } from '@web3-storage/w3up-client/stores/memory'
 import * as Signer from '@ucanto/principal/ed25519'
 import { CarReader } from '@ipld/car'
@@ -140,7 +141,7 @@ export const uploadFileWeb3 = async(file: File):Promise<AnyLink> =>{
 
   const principal = Signer.parse(web3key)
   const store = new StoreMemory()
-  const client = await create({ principal, store })
+  const client = await Client.create({ principal, store })
   // Add proof that this agent has been delegated capabilities on the space
   const proof: Delegation<Capabilities> = await parseProof(web3delegationProof) // Explicitly type the proof variable
   const space = await client.addSpace(proof)
