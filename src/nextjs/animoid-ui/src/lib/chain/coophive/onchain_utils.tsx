@@ -40,6 +40,7 @@ console.log(`tokenAddress: ${tokenAddress}`)
 // Define gas price (in wei)
 const gasPrice = ethers.parseUnits('50', 'gwei');
 const nonce1 = await provider.getTransactionCount(wallet.address, 'latest');
+const nonce2 = nonce1 + 1;
 console.log(`nonce1: ${nonce1}`)
 const escrowPaid = await tokenContract.approve(controllerAddress, requiredDeposit, {
   nonce: nonce1,
@@ -48,7 +49,7 @@ const escrowPaid = await tokenContract.approve(controllerAddress, requiredDeposi
 
 console.log(escrowPaid)
 
-const nonce2 = await provider.getTransactionCount(wallet.address, 'latest');
+
 console.log(`nonce2: ${nonce2}`)
 const runjobTx = await dfContract.runVideoScanner(cid,{
   nonce: nonce2,
