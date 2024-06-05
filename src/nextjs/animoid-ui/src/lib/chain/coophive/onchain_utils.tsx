@@ -4,6 +4,7 @@ import DfVideoScannerABI from './abis/DfVideoScanner.json';
 import CoopHiveOnChainJobCreatorABI from './abis/CoopHiveOnChainJobCreator.json';
 import CoopHiveTokenABI from './abis/CoopHiveToken.json';
 
+
 export const runVideoScanner = async (cid:string) => {
  // the private key of the person with tokens
  const privateKey = process.env.NEXT_PRIVATE_COOPHIVE_KEY;
@@ -39,6 +40,7 @@ console.log(`tokenAddress: ${tokenAddress}`)
 // Define gas price (in wei)
 const gasPrice = ethers.parseUnits('50', 'gwei');
 const nonce1 = await provider.getTransactionCount(wallet.address, 'latest');
+console.log(`nonce1: ${nonce1}`)
 const escrowPaid = await tokenContract.approve(controllerAddress, requiredDeposit, {
   nonce: nonce1,
   gasPrice: gasPrice
@@ -47,6 +49,7 @@ const escrowPaid = await tokenContract.approve(controllerAddress, requiredDeposi
 console.log(escrowPaid)
 
 const nonce2 = await provider.getTransactionCount(wallet.address, 'latest');
+console.log(`nonce2: ${nonce2}`)
 const runjobTx = await dfContract.runVideoScanner(cid,{
   nonce: nonce2,
   gasPrice: gasPrice
