@@ -2,10 +2,7 @@
 import Title from "@/components/ui/title";
 import FileUpload from "@/components/upload/fileUpload";
 
-export const config = {
-  maxDuration: 300,
-};
- 
+export const maxDuration = 300
 
 export default function Analyze() {
   return (
