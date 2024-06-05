@@ -90,12 +90,6 @@ export default function FileUpload() {
       formData.append('fileName', file.name);
       formData.append('fileType', file.type);
 
-     /* const result = await fetch('/api/inference', {
-        method: 'POST',
-        body: formData,
-        headers: {
-        }
-      });*/
       const result = await invokeDetection(formData);
       console.log(result);
 

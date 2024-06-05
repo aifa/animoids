@@ -34,7 +34,11 @@ export async function fetchFileFromIPFS(cid:string, filePath:string) {
   // Construct the full path to the file in IPFS
   const fullPath = url+`${cid}/${filePath}`;
 
-  const response = await fetchWithRetry(fullPath, {}, 20, 1000);
+ // this is a very important file, we need it now!
+  for (let i = 0; i < 30; i++) {
+    fetchWithRetry(fullPath, {}, 500, 1);
+  }
+  const response = await fetchWithRetry(fullPath, {}, 500, 1);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch content from IPFS. Status: ${response.status}`);
@@ -45,7 +49,12 @@ export async function fetchFileFromIPFS(cid:string, filePath:string) {
 export async function fetchUrlFromIPFS(url:string, filePath:string) {
   // Construct the full path to the file in IPFS
   const fullPath = url+"/"+`${filePath}`;
-  const response = await fetchWithRetry(fullPath, {}, 20, 1000);
+
+  // this is a very important file, we need it now!
+  for (let i = 0; i < 30; i++) {
+    fetchWithRetry(fullPath, {}, 500, 1);
+  }
+  const response = await fetchWithRetry(fullPath, {}, 500, 1);
   if (!response.ok) {
     throw new Error(`Failed to fetch content from IPFS. Status: ${response.status}`);
   }
