@@ -8,7 +8,10 @@ import { fetchFileFromIPFS, fetchUrlFromIPFS, getWeb3StorageUrl } from "@/lib/ip
 import { uploadFile } from "@/lib/ipfs/web3storage";
 import { NextResponse } from "next/server";
 
-export const maxDuration = 300
+export const config = {
+  maxDuration: 5,
+};
+ 
 
 export default async function invokeDetection(formData: FormData) {
 
@@ -69,7 +72,7 @@ const runDetection = async (dirCid:string, v1Cid:string, fileType:string) => {
     }
   }
   
-  async function runImageScan(dirCid: string): Promise<any> {
+async function runImageScan(dirCid: string): Promise<any> {
     const lavaResults = await runLlavaInference(dirCid);
     console.log(lavaResults);
   
