@@ -9,6 +9,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@tanstack/react-query": "^5.40.0",
     "@web3-storage/w3up-client": "^13.1.1",
+    "@web3modal/ethers": "^4.2.3",
     "bls-eth-wasm": "^1.2.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
