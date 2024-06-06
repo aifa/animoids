@@ -100,7 +100,7 @@ const secondScan = async (v1Cid:string, resultsUrl: string,  fileType:string): P
         return agentAsssessment;
       }catch (error: any) {
         console.error(`Error: ${error.message}`);
-        throw new Error(`Error: ${error.message}`);
+        return `Error: ${error.message}`;
       }
       
     } else if (isVideo) {
@@ -112,10 +112,10 @@ const secondScan = async (v1Cid:string, resultsUrl: string,  fileType:string): P
         return agentAsssessment;
       }catch (error: any) {
         console.error(`Error: ${error.message}`);
-        throw new Error(`Error: ${error.message}`);
+        return `Error: ${error.message}`;
       }
     }
-    throw new Error("Unsupported file type");
+    return "Unsupported file type";
   }
   
 async function getLlavaResults(resultsUrl: string): Promise<string> {

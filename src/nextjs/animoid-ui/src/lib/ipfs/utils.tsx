@@ -37,7 +37,7 @@ export async function fetchFileFromIPFS(cid:string, filePath:string) {
   for (let i = 0; i < 20; i++) {
     fetchWithRetry(fullPath, {}, 500, 1);
   }
-  const response = await fetchWithRetry(fullPath, {}, 500, 1);
+  const response = await fetchWithRetry(fullPath, {}, 1, 1000);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch content from IPFS. Status: ${response.status}`);
@@ -52,20 +52,25 @@ export async function fetchUrlFromIPFS(url:string, filePath:string) {
   for (let i = 0; i < 20; i++) {
     fetchWithRetry(fullPath, {}, 500, 1);
   }
-  const response = await fetchWithRetry(fullPath, {}, -1, 10);
+  const response = await fetchWithRetry(fullPath, {}, 1, 1000);
   if (!response.ok) {
     throw new Error(`Failed to fetch content from IPFS. Status: ${response.status}`);
   }
   return await response;
 }
 
+/**
+ * Fetches a URL with retries
+ * @param url
+ * 
+ * */
 export async function fetchUrlWithRetries(url: string): Promise<Response> {
   // send 20 requests to the same url
   for (let i = 0; i < 20; i++) {
     fetchWithRetry(url, {}, 1, 0);
   }
   console.log(`Fetching ${url}`);
-  const response = await fetchWithRetry(url, {}, 500, 1);
+  const response = await fetchWithRetry(url, {}, 600, 1000);
   if (!response.ok) {
     throw new Error(`Failed to fetch content from IPFS. Status: ${response.status}`);
   }
