@@ -14,11 +14,14 @@ export default function FileUpload() {
   const [description, setDescription] = useState('');
   const [message, setMessage] = useState<any>('');
   const [firstPassResultUrl, setFirstPassResultUrl] = useState<string>("");
+  const [firstPassResults, setFirstPassResults] = useState<[string, string]>(["",""]);
   const [isProcessing, setIsProcessing] = useState(false)
   const [processResult, setProcessResult] = useState<string>("")
 
 
-    const handleFileSelection = (selectedFile: File) => {
+  const [GTP4OnlyFlag, setGTP4OnlyFlag]= useState<string | undefined>(process.env.GPT4_ONLY);
+
+  const handleFileSelection = (selectedFile: File) => {
       setFile(selectedFile);
       if (selectedFile && selectedFile.type.startsWith("image/")) {
         const reader = new FileReader();
@@ -41,7 +44,7 @@ export default function FileUpload() {
       handleDismissResult();
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (e.target.files) {
         const selectedFile = e.target.files[0];
         handleFileSelection(selectedFile);
@@ -83,7 +86,6 @@ export default function FileUpload() {
       return;
     }
     await submitFile(file);
-    setIsProcessing(false);
   };
 
   const submitFile = async (file: File) => {
@@ -93,31 +95,49 @@ export default function FileUpload() {
       formData.append('fileName', file.name);
       formData.append('fileType', file.type);
 
-      const firstPassResult:[string, string] = await startScanning(formData);
-      console.log(firstPassResult);
-      setFirstPassResultUrl(firstPassResult[1]); 
-      
-      const v1VidCid = firstPassResult[0];
-
-      const secform = new FormData();
-      secform.append('v1cID', v1VidCid);
-      secform.append('fileType', file.type);
-      secform.append('resultsUrl', firstPassResult[1]);
-
-      const summary = await startSecondScan(secform);
-      setProcessResult(summary);
+      setFirstPassResults(await startScanning(formData));
+      console.log(firstPassResults);
     } catch (error: any) {
       console.error(`Error: ${error.message}`);
       setProcessResult(`An unexpected error occurred... Please try again later.`);
       setFirstPassResultUrl("Empty");
+      setIsProcessing(false);
     }
-    setIsProcessing(false);
+
   }
 
   const handleDismissResult = () => {
     setProcessResult("")
     setFirstPassResultUrl("")
   }
+
+  //trigget second scan when results from first one are available
+  useEffect(() => {
+    if (firstPassResults[0] && firstPassResults[1]) {
+      console.log("first pass results available, starting second scan");
+      if (file===null || file===undefined) {
+        console.error(`Error: File is null`);
+        setProcessResult(`An unexpected error occurred... Please try again later.`);
+        setFirstPassResultUrl("Empty");
+        return ;
+      }
+      setFirstPassResultUrl(firstPassResults[1]); 
+      const v1VidCid = firstPassResults[0];
+
+      const secform = new FormData();
+      secform.append('v1cID', v1VidCid);
+      secform.append('fileType', file.type);
+      secform.append('resultsUrl', firstPassResults[1]);
+      const scanTrigger = async (secform: FormData) => {
+        const summary = await startSecondScan(secform);
+        console.log(summary);
+        setProcessResult(summary);
+        setIsProcessing(false);
+      }
+      scanTrigger(secform);
+    }
+  }, [firstPassResults]); // eslint-disable-line react-hooks/exhaustive-deps, 
+                          // this needs to run only when first pass results are available
 
   return (
     
@@ -186,11 +206,11 @@ export default function FileUpload() {
     {firstPassResultUrl  && (
       <Card className="w-full max-w-3xl mx-auto relative">
         <CardHeader>
-          <CardTitle>Results</CardTitle>
+          <CardTitle> {isProcessing ? <div className="animate-pulse">Results...</div> : "Results"}</CardTitle>
           </CardHeader>
         <CardContent>
-          <p className="text-gray-500"><Link className="text-blue-500" href={firstPassResultUrl} target="_blank">
-          <li> First scan</li></Link> </p>
+          <p className="text-gray-500"><li> <Link className="text-blue-500" href={firstPassResultUrl} target="_blank">
+          First scan</Link> - (Final result depends on availability of this file on the network)</li></p>
                  {processResult && (<p className="text-gray-500">{processResult}</p>)}
         </CardContent>
         <CardFooter  className="flex justify-center">

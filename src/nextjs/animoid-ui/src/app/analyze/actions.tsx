@@ -37,7 +37,7 @@ export async function startSecondScan(formData: FormData): Promise<string> {
 }
 
 /**
- * Girst scan of the image. Returns an ipfs link to the results
+ * First scan of the image. Returns an ipfs link to the results
  * @param dirCid 
  * @param fileType 
  * @returns 
@@ -45,6 +45,13 @@ export async function startSecondScan(formData: FormData): Promise<string> {
 const firstScan = async (dirCid:string, fileType:string): Promise<string> => {
     const isImage = fileType.includes("image"); 
     const isVideo = fileType.includes("video");
+
+    const GTP4OnlyFlag = process.env.GPT4_ONLY;
+    if (!GTP4OnlyFlag) {
+      console.error("Missing GTP4_ONLY in .env");
+      throw new Error("Missing GTP4_ONLY in .env");
+    }
+    if (GTP4OnlyFlag == "true") return "Firts scan bypassed..."
 
     if (isImage) { 
       try{
@@ -83,7 +90,11 @@ const secondScan = async (v1Cid:string, resultsUrl: string,  fileType:string): P
     if (isImage) { 
       try{
 
-        const llavaAssessment:string = await getLlavaResults(resultsUrl);
+        let llavaAssessment:string = "";
+        if (GTP4OnlyFlag == "true") {
+        }else{
+          llavaAssessment = await getLlavaResults(resultsUrl);
+        }
         const agentAsssessment = await submitAgentRequest(getWeb3StorageUrl(v1Cid), imagePrompt(llavaAssessment));
   
         return agentAsssessment;
@@ -93,7 +104,7 @@ const secondScan = async (v1Cid:string, resultsUrl: string,  fileType:string): P
       }
       
     } else if (isVideo) {
-      
+      if (GTP4OnlyFlag == "true") return "Video processing currently disabled."
       try{
         const result = await fetchUrlWithRetries(resultsUrl);
         const assessment = await result.text();

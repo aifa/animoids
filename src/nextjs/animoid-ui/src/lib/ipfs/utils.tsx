@@ -34,8 +34,7 @@ export async function fetchFileFromIPFS(cid:string, filePath:string) {
   // Construct the full path to the file in IPFS
   const fullPath = url+`${cid}/${filePath}`;
 
- // this is a very important file, we need it now!
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 20; i++) {
     fetchWithRetry(fullPath, {}, 500, 1);
   }
   const response = await fetchWithRetry(fullPath, {}, 500, 1);
@@ -49,12 +48,11 @@ export async function fetchFileFromIPFS(cid:string, filePath:string) {
 export async function fetchUrlFromIPFS(url:string, filePath:string) {
   // Construct the full path to the file in IPFS
   const fullPath = url+"/"+`${filePath}`;
-
-  // this is a very important file, we need it now!
-  for (let i = 0; i < 30; i++) {
+  
+  for (let i = 0; i < 20; i++) {
     fetchWithRetry(fullPath, {}, 500, 1);
   }
-  const response = await fetchWithRetry(fullPath, {}, 500, 1);
+  const response = await fetchWithRetry(fullPath, {}, -1, 10);
   if (!response.ok) {
     throw new Error(`Failed to fetch content from IPFS. Status: ${response.status}`);
   }
@@ -62,10 +60,11 @@ export async function fetchUrlFromIPFS(url:string, filePath:string) {
 }
 
 export async function fetchUrlWithRetries(url: string): Promise<Response> {
-  // this is a very important file, we need it now!
-  for (let i = 0; i < 30; i++) {
-    fetchWithRetry(url, {}, 500, 1);
+  // send 20 requests to the same url
+  for (let i = 0; i < 20; i++) {
+    fetchWithRetry(url, {}, 1, 0);
   }
+  console.log(`Fetching ${url}`);
   const response = await fetchWithRetry(url, {}, 500, 1);
   if (!response.ok) {
     throw new Error(`Failed to fetch content from IPFS. Status: ${response.status}`);
@@ -73,22 +72,29 @@ export async function fetchUrlWithRetries(url: string): Promise<Response> {
   return response;
 }
 
+/**
+ * 
+ * @param url 
+ * @param options 
+ * @param maxRetries 
+ * @param delay 
+ * @returns 
+ */
 export async function fetchWithRetry(url: string, options: RequestInit, maxRetries: number, delay: number = 1000): Promise<Response> {
   let attempts = 0;
 
   while (attempts < maxRetries) {
     try {
-     //console.log(`Attempt ${attempts + 1}: Fetching ${url}`);
+     console.log(`Attempt ${attempts + 1}: Fetching ${url}`);
       const response = await fetch(url, options);
       if (response.status === 200) {
         return response;
       } else {
-        //console.log(`Attempt ${attempts + 1} failed: ${response.status} ${response.statusText}`);
+        console.log(`Attempt ${attempts + 1} failed: ${response.status} ${response.statusText}`);
       }
     } catch (error: any) {
       console.log(`Attempt ${attempts + 1} encountered an error: ${error.message}`);
     }
-
     attempts++;
     if (attempts < maxRetries) {
       await new Promise(resolve => setTimeout(resolve, delay));
