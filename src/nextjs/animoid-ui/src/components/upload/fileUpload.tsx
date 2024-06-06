@@ -109,6 +109,7 @@ export default function FileUpload() {
     } catch (error: any) {
       console.error(`Error: ${error.message}`);
       setProcessResult(`An unexpected error occurred... Please try again later.`);
+      setFirstPassResultUrl("Empty");
     }
     setIsProcessing(false);
   }
@@ -182,13 +183,14 @@ export default function FileUpload() {
         </Button>
       </CardFooter>
     </Card>
-    {firstPassResultUrl && (
+    {firstPassResultUrl  && (
       <Card className="w-full max-w-3xl mx-auto relative">
         <CardHeader>
           <CardTitle>Results</CardTitle>
           </CardHeader>
         <CardContent>
-          <p className="text-gray-500"><Link className="text-blue-500" href={firstPassResultUrl} target="_blank">Results of the first Scan</Link> </p>
+          <p className="text-gray-500"><Link className="text-blue-500" href={firstPassResultUrl} target="_blank">
+          <li> First scan</li></Link> </p>
                  {processResult && (<p className="text-gray-500">{processResult}</p>)}
         </CardContent>
         <CardFooter  className="flex justify-center">
