@@ -2,9 +2,10 @@
 import { Input } from "@/components/ui/input"
 import { CardContent, CardFooter, Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { use, useEffect, useState } from "react"
 import Image from "next/image"
-import invokeDetection from "@/app/analyze/actions"
+import startScanning, { startSecondScan } from "@/app/analyze/actions"
+import Link from "next/link"
 
 export default function FileUpload() {
   const [file, setFile] = useState<File | null>(null);
@@ -12,6 +13,7 @@ export default function FileUpload() {
   const [videoPreview, setVideoPreview] = useState<string | ArrayBuffer | null>(null);
   const [description, setDescription] = useState('');
   const [message, setMessage] = useState<any>('');
+  const [firstPassResultUrl, setFirstPassResultUrl] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState(false)
   const [processResult, setProcessResult] = useState<string>("")
 
@@ -36,7 +38,7 @@ export default function FileUpload() {
         setImagePreview(null);
         setVideoPreview(null);
       }
-      setDescription('');
+      handleDismissResult();
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,7 +53,7 @@ export default function FileUpload() {
     setFile(null)
     setImagePreview(null)
     setVideoPreview(null)
-    setDescription('')
+    handleDismissResult();
   }
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescription(e.target.value);
@@ -64,6 +66,7 @@ export default function FileUpload() {
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
+    handleDismissResult();
     if (e.dataTransfer.files) {
       const selectedFile = e.dataTransfer.files[0];
       handleFileSelection(selectedFile);
@@ -73,7 +76,7 @@ export default function FileUpload() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
-    setProcessResult("")
+    handleDismissResult();
     if (!file) {
       setMessage('Please select a file.');
       setIsProcessing(false);
@@ -90,23 +93,29 @@ export default function FileUpload() {
       formData.append('fileName', file.name);
       formData.append('fileType', file.type);
 
-      const result = await invokeDetection(formData);
-      console.log(result);
+      const firstPassResult:[string, string] = await startScanning(formData);
+      console.log(firstPassResult);
+      setFirstPassResultUrl(firstPassResult[1]); 
+      
+      const v1VidCid = firstPassResult[0];
 
-      if (result==undefined) {
-        setProcessResult("An unexpected error occurred... Please try again later.");
-        return;
-      }
+      const secform = new FormData();
+      secform.append('v1cID', v1VidCid);
+      secform.append('fileType', file.type);
+      secform.append('resultsUrl', firstPassResult[1]);
 
-      setProcessResult(result);
+      const summary = await startSecondScan(secform);
+      setProcessResult(summary);
     } catch (error: any) {
       console.error(`Error: ${error.message}`);
       setProcessResult(`An unexpected error occurred... Please try again later.`);
     }
     setIsProcessing(false);
   }
+
   const handleDismissResult = () => {
     setProcessResult("")
+    setFirstPassResultUrl("")
   }
 
   return (
@@ -173,13 +182,14 @@ export default function FileUpload() {
         </Button>
       </CardFooter>
     </Card>
-    {processResult && (
+    {firstPassResultUrl && (
       <Card className="w-full max-w-3xl mx-auto relative">
         <CardHeader>
           <CardTitle>Results</CardTitle>
           </CardHeader>
         <CardContent>
-          <p className="text-gray-500">{processResult}</p>
+          <p className="text-gray-500"><Link className="text-blue-500" href={firstPassResultUrl} target="_blank">Results of the first Scan</Link> </p>
+                 {processResult && (<p className="text-gray-500">{processResult}</p>)}
         </CardContent>
         <CardFooter  className="flex justify-center">
             <Button

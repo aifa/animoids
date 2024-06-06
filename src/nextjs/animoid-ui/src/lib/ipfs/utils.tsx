@@ -61,17 +61,29 @@ export async function fetchUrlFromIPFS(url:string, filePath:string) {
   return await response;
 }
 
+export async function fetchUrlWithRetries(url: string): Promise<Response> {
+  // this is a very important file, we need it now!
+  for (let i = 0; i < 30; i++) {
+    fetchWithRetry(url, {}, 500, 1);
+  }
+  const response = await fetchWithRetry(url, {}, 500, 1);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch content from IPFS. Status: ${response.status}`);
+  }
+  return response;
+}
+
 export async function fetchWithRetry(url: string, options: RequestInit, maxRetries: number, delay: number = 1000): Promise<Response> {
   let attempts = 0;
 
   while (attempts < maxRetries) {
     try {
-      console.log(`Attempt ${attempts + 1}: Fetching ${url}`);
+     //console.log(`Attempt ${attempts + 1}: Fetching ${url}`);
       const response = await fetch(url, options);
       if (response.status === 200) {
         return response;
       } else {
-        console.log(`Attempt ${attempts + 1} failed: ${response.status} ${response.statusText}`);
+        //console.log(`Attempt ${attempts + 1} failed: ${response.status} ${response.statusText}`);
       }
     } catch (error: any) {
       console.log(`Attempt ${attempts + 1} encountered an error: ${error.message}`);
