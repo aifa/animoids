@@ -50,8 +50,8 @@ const firstScan = async (dirCid:string, fileType:string): Promise<string> => {
       try{
         const lavaResults = await runLlavaInference(dirCid);
         console.log(lavaResults);
-        console.log(lavaResults.ipfscid+"/outputs/response.json");
-        return lavaResults.ipfscid+"/outputs/response.json";
+        console.log(lavaResults.url+"/outputs/response.json");
+        return lavaResults.url+"/outputs/response.json";
       }catch (error: any) {
         console.error(`Error: ${error.message}`);
         throw new Error(`Error: ${error.message}`);
