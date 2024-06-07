@@ -1,80 +1,23 @@
-
-export async function downloadFromIPFS(cid: string): Promise<string> {
-  const url = `https://ipfs.io/ipfs/${cid}`;
-
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch content from IPFS. Status: ${response.status}`);
-  }
-
-  const content = await response.text();
-  return content;
-}
-
-export async function fetchFileContents(url: string): Promise<Blob> {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const blob = await response.blob();
-    return blob;
-  } catch (error) {
-    console.error('Fetch error:', error);
-  }
-  return new Blob();
-}
-
-
-export async function fetchFileFromIPFS(cid:string, filePath:string) {
-  // Initialize IPFS
-  const url = 'https://ipfs.io/ipfs/';
-
-  // Construct the full path to the file in IPFS
-  const fullPath = url+`${cid}/${filePath}`;
-
-  for (let i = 0; i < 20; i++) {
-    fetchWithRetry(fullPath, {}, 500, 1);
-  }
-  const response = await fetchWithRetry(fullPath, {}, 1, 1000);
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch content from IPFS. Status: ${response.status}`);
-  }
-  return await response;
-}
-
-export async function fetchUrlFromIPFS(url:string, filePath:string) {
-  // Construct the full path to the file in IPFS
-  const fullPath = url+"/"+`${filePath}`;
-  
-  for (let i = 0; i < 20; i++) {
-    fetchWithRetry(fullPath, {}, 500, 1);
-  }
-  const response = await fetchWithRetry(fullPath, {}, 1, 1000);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch content from IPFS. Status: ${response.status}`);
-  }
-  return await response;
-}
-
 /**
- * Fetches a URL with retries
+ * Fetches an IPFS URL with retries
  * @param url
- * 
+ * throws error if the fetch fails.
  * */
-export async function fetchUrlWithRetries(url: string): Promise<Response> {
-  // send 20 requests to the same url
-  for (let i = 0; i < 20; i++) {
-    fetchWithRetry(url, {}, 1, 0);
-  }
-  console.log(`Fetching ${url}`);
-  const response = await fetchWithRetry(url, {}, 600, 1000);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch content from IPFS. Status: ${response.status}`);
-  }
-  return response;
+export async function fetchUrlWithRetries(url: string): Promise<Response | undefined> {
+  
+    try{//initiate some fecthes in parallel to the main loop.
+        fetchWithRetry(url, {}, 20, 0);
+    }catch(e){}
+    console.log(`Fetching ${url}`);
+    try{
+      const response = await fetchWithRetry(url, {}, 600, 1000);
+      if (response.ok) { //return only if the fetch is successful.
+        return response;
+      }
+    }catch(e:any){
+      console.error(`Failed to fetch content from IPFS. Error: ${e.message}`);
+      return undefined;
+    }
 }
 
 /**
@@ -83,21 +26,25 @@ export async function fetchUrlWithRetries(url: string): Promise<Response> {
  * @param options 
  * @param maxRetries 
  * @param delay 
- * @returns 
+ * @returns response Promise only in case a fetch is successful.
+ * throws error if all retries fail to fetch. a result.
  */
 export async function fetchWithRetry(url: string, options: RequestInit, maxRetries: number, delay: number = 1000): Promise<Response> {
   let attempts = 0;
 
+  if (url === undefined || url ===""){
+    throw new Error("Undefined URL");
+  }
   while (attempts < maxRetries) {
     try {
      console.log(`Attempt ${attempts + 1}: Fetching ${url}`);
       const response = await fetch(url, options);
-      if (response.status === 200) {
+      if (response.status === 200) { // return only if the fetch is successful.
         return response;
       } else {
         console.log(`Attempt ${attempts + 1} failed: ${response.status} ${response.statusText}`);
       }
-    } catch (error: any) {
+    } catch (error: any) {// catch all errors to finish all the retries.
       console.log(`Attempt ${attempts + 1} encountered an error: ${error.message}`);
     }
     attempts++;
@@ -105,7 +52,6 @@ export async function fetchWithRetry(url: string, options: RequestInit, maxRetri
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
-
   throw new Error(`Failed to fetch ${url} after ${maxRetries} attempts`);
 }
 

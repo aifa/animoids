@@ -4,7 +4,7 @@ import { submitAgentRequest } from "@/lib/chain/galadriel/openAiVision_agent";
 import { imagePrompt, videoPlaceHolder, videoPrompt } from "@/lib/chain/galadriel/prompts";
 import { runDeepFakeVideoDetection, runLlavaInference } from "@/lib/inference";
 import { uploadQWithDirWrapAPICall } from "@/lib/ipfs/lighthouse";
-import { fetchFileFromIPFS, fetchUrlFromIPFS, fetchUrlWithRetries, getIpfsUrl, getWeb3StorageUrl } from "@/lib/ipfs/utils";
+import { fetchUrlWithRetries, getIpfsUrl, getWeb3StorageUrl } from "@/lib/ipfs/utils";
 import { uploadFile } from "@/lib/ipfs/web3storage";
 
 /**
@@ -58,6 +58,7 @@ const firstScan = async (dirCid:string, fileType:string): Promise<string> => {
         const lavaResults = await runLlavaInference(dirCid);
         console.log(lavaResults);
         console.log(lavaResults.url+"/outputs/response.json");
+        if (!lavaResults) throw new Error("Failed to get results from firts scan");
         return lavaResults.url+"/outputs/response.json";
       }catch (error: any) {
         console.error(`Error: ${error.message}`);
@@ -80,33 +81,30 @@ const firstScan = async (dirCid:string, fileType:string): Promise<string> => {
 const secondScan = async (v1Cid:string, resultsUrl: string,  fileType:string): Promise<string> => {
     const isImage = fileType.includes("image"); 
     const isVideo = fileType.includes("video");
-     
     const GTP4OnlyFlag = process.env.GPT4_ONLY;
+
     if (!GTP4OnlyFlag) {
       console.error("Missing GTP4_ONLY in .env");
       throw new Error("Missing GTP4_ONLY in .env");
     }
-  
     if (isImage) { 
       try{
-
         let llavaAssessment:string = "";
         if (GTP4OnlyFlag == "true") {
         }else{
           llavaAssessment = await getLlavaResults(resultsUrl);
         }
         const agentAsssessment = await submitAgentRequest(getWeb3StorageUrl(v1Cid), imagePrompt(llavaAssessment));
-  
         return agentAsssessment;
       }catch (error: any) {
         console.error(`Error: ${error.message}`);
         return `Error: ${error.message}`;
       }
-      
     } else if (isVideo) {
       if (GTP4OnlyFlag == "true") return "Video processing currently disabled."
       try{
         const result = await fetchUrlWithRetries(resultsUrl);
+        if (!result?.ok) throw new Error("Failed to fetch results.");
         const assessment = await result.text();
         const agentAsssessment = await submitAgentRequest(videoPlaceHolder, videoPrompt(assessment));
         return agentAsssessment;
@@ -117,16 +115,23 @@ const secondScan = async (v1Cid:string, resultsUrl: string,  fileType:string): P
     }
     return "Unsupported file type";
   }
-  
+
+  /* Returns the Json holding the results from Llava inference   
+  * @param resultsUrl : the ipfs url of the results of the first pass.
+  *  @returns : the texrt response from the llm.
+  */
 async function getLlavaResults(resultsUrl: string): Promise<string> {
      
     let assessment: Record<string, any> = {response: ""};
+    if (!resultsUrl) return "No results to analyse.";
+
     try{
         const result = await fetchUrlWithRetries(resultsUrl);
-        assessment = await result.json();
+        if (result?.ok) assessment = await result.json();
         console.log(assessment);
       }catch(e:any){
         console.error(`Error: ${e.message}`);
+        assessment.response = `Error: ${e.message}`;
       }
       return assessment.response;
   }
