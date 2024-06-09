@@ -49,7 +49,6 @@ const escrowPaid = await tokenContract.approve(controllerAddress, requiredDeposi
 
 console.log(escrowPaid)
 
-
 console.log(`nonce2: ${nonce2}`)
 const runjobTx = await dfContract.runVideoScanner(cid,{
   nonce: nonce2,

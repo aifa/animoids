@@ -1,6 +1,6 @@
 import { runVideoScanner } from "./chain/coophive/onchain_utils";
 
-export const runLlavaInference = async (dirCid: string) => {
+export const runDfImageDetection = async (dirCid: string) => {
 
     const apikey = process.env.NEXT_PRIVATE_LILYPAD_KEY;
     if (!apikey) throw Error("Missing NEXT_PRIVATE_LILYPAD_KEY in .env")
@@ -30,7 +30,7 @@ export const runLlavaInference = async (dirCid: string) => {
     }
 }
 
-export const runDeepFakeVideoDetection = async (videoFolderCid: string) => {
+export const runDFVideoDetection = async (videoFolderCid: string) => {
     try{
         return await runVideoScanner(videoFolderCid);
     }
