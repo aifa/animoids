@@ -4,7 +4,7 @@ import { submitAgentRequest } from "@/lib/chain/galadriel/openAiVision_agent";
 import { imagePrompt, videoPlaceHolder, videoPrompt } from "@/lib/chain/galadriel/prompts";
 import { runDeepFakeVideoDetection, runLlavaInference } from "@/lib/inference";
 import { uploadQWithDirWrapAPICall } from "@/lib/ipfs/lighthouse";
-import { fetchUrlWithRetries, getIpfsUrl, getWeb3StorageUrl } from "@/lib/ipfs/utils";
+import { fetchUrlWithRetries, getIpfsGatewayUrl, getWeb3StorageUrl } from "@/lib/ipfs/utils";
 import { uploadFile } from "@/lib/ipfs/web3storage";
 
 /**
@@ -67,7 +67,7 @@ const firstScan = async (dirCid:string, fileType:string): Promise<string> => {
     } else if (isVideo) {
       const cid = await runDeepFakeVideoDetection(dirCid);
       console.log(cid);
-      return getIpfsUrl(cid, "outputs/results.csv");
+      return getIpfsGatewayUrl(cid, "outputs/results.csv");
     }else
     throw new Error("Unsupported file type");
 }

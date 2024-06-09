@@ -1,3 +1,7 @@
+import { CID } from 'multiformats/cid';
+import { base58btc } from 'multiformats/bases/base58';
+import { base32 } from 'multiformats/bases/base32';
+
 /**
  * Fetches an IPFS URL with retries
  * @param url
@@ -59,8 +63,27 @@ export function getWeb3StorageUrl(cid: string): string {
   return `https://${cid}.ipfs.w3s.link`;
 }
 
-export function getIpfsUrl(dirId: string, filePath: string): string {
+export function getIpfsGatewayUrl(dirId: string, filePath: string): string {
   console.log(`https://ipfs.io/ipfs/${dirId}/${filePath}`);
   return `https://ipfs.io/ipfs/${dirId}/${filePath}`;
 }
 
+// Function to check if a string contains a valid IPFS CID v0
+export function containsValidCIDv0(input: string): boolean {
+  try {
+    const cid = CID.parse(input, base58btc);
+    return cid.version === 0;
+  } catch (error) {
+    return false;
+  }
+}
+
+// Function to check if a string contains a valid IPFS CID v1
+export function containsValidCIDv1(input: string): boolean {
+  try {
+    const cid = CID.parse(input, base32);
+    return cid.version === 1;
+  } catch (error) {
+    return false;
+  }
+}
