@@ -69,7 +69,7 @@ export function getIpfsGatewayUrl(dirId: string, filePath: string): string {
 }
 
 // Function to check if a string contains a valid IPFS CID v0
-export function containsValidCIDv0(input: string): boolean {
+export function issValidCIDv0(input: string): boolean {
   try {
     const cid = CID.parse(input, base58btc);
     return cid.version === 0;
@@ -79,7 +79,7 @@ export function containsValidCIDv0(input: string): boolean {
 }
 
 // Function to check if a string contains a valid IPFS CID v1
-export function containsValidCIDv1(input: string): boolean {
+export function isValidCIDv1(input: string): boolean {
   try {
     const cid = CID.parse(input, base32);
     return cid.version === 1;

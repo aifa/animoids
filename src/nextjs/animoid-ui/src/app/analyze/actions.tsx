@@ -4,7 +4,7 @@ import { submitAgentRequest } from "@/lib/chain/galadriel/openAiVision_agent";
 import { imagePrompt, videoPlaceHolder, videoPrompt } from "@/lib/chain/galadriel/prompts";
 import { runDeepFakeVideoDetection, runLlavaInference } from "@/lib/inference";
 import { uploadQWithDirWrapAPICall } from "@/lib/ipfs/lighthouse";
-import { fetchUrlWithRetries, getIpfsGatewayUrl, getWeb3StorageUrl } from "@/lib/ipfs/utils";
+import { issValidCIDv0, fetchUrlWithRetries, getIpfsGatewayUrl, getWeb3StorageUrl } from "@/lib/ipfs/utils";
 import { uploadFile } from "@/lib/ipfs/web3storage";
 
 /**
@@ -58,7 +58,7 @@ const firstScan = async (dirCid:string, fileType:string): Promise<string> => {
         const lavaResults = await runLlavaInference(dirCid);
         console.log(lavaResults);
         console.log(lavaResults.url+"/outputs/response.json");
-        if (!lavaResults) throw new Error("Failed to get results from firts scan");
+        if (!lavaResults || !issValidCIDv0(lavaResults.cid)) throw new Error("Failed to get results from firts scan");
         return lavaResults.url+"/outputs/response.json";
       }catch (error: any) {
         console.error(`Error: ${error.message}`);
@@ -66,6 +66,7 @@ const firstScan = async (dirCid:string, fileType:string): Promise<string> => {
       }
     } else if (isVideo) {
       const cid = await runDeepFakeVideoDetection(dirCid);
+      if (!cid || !issValidCIDv0(cid)) throw new Error("Failed to get results from firts scan...");
       console.log(cid);
       return getIpfsGatewayUrl(cid, "outputs/results.csv");
     }else
