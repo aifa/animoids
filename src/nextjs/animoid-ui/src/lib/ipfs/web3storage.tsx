@@ -42,4 +42,4 @@ export const uploadFile = async(file: File):Promise<AnyLink> =>{
     ]
     const localClient = await web3StorageClient;
     return await localClient.uploadFile(file);
-  }
+}

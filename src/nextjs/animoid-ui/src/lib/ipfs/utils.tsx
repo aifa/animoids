@@ -10,11 +10,11 @@ import { base32 } from 'multiformats/bases/base32';
 export async function fetchUrlWithRetries(url: string): Promise<Response | undefined> {
   
     try{//initiate some fecthes in parallel to the main loop.
-        fetchWithRetry(url, {}, 20, 0);
+        fetchWithRetry(url, {}, 1, 0);
     }catch(e){}
     console.log(`Fetching ${url}`);
     try{
-      const response = await fetchWithRetry(url, {}, 600, 1000);
+      const response = await fetchWithRetry(url, {}, 50, 1000);
       if (response.ok) { //return only if the fetch is successful.
         return response;
       }
@@ -68,10 +68,24 @@ export function getIpfsGatewayUrl(dirId: string, filePath: string): string {
   return `https://ipfs.io/ipfs/${dirId}/${filePath}`;
 }
 
-// Function to check if a string contains a valid IPFS CID v0
-export function issValidCIDv0(input: string): boolean {
+/**
+ * Method that tries to extract the Cid from an ipfs url
+ * @param url 
+ */
+function getCid(url: string): string | null {
   try {
-    const cid = CID.parse(input, base58btc);
+    const cidRegex = /\/ipfs\/([a-zA-Z0-9]+)$/;
+    const match = url.match(cidRegex);
+    const cid = match ? match[1] : null;
+    return cid;
+  } catch (error) {
+    return null;
+  }
+}
+// Function to check if a string contains a valid IPFS CID v0
+export function issValidCIDv0(inputUrl: string): boolean {
+  try {
+    const cid = CID.parse(inputUrl, base58btc);
     return cid.version === 0;
   } catch (error) {
     return false;
@@ -79,9 +93,9 @@ export function issValidCIDv0(input: string): boolean {
 }
 
 // Function to check if a string contains a valid IPFS CID v1
-export function isValidCIDv1(input: string): boolean {
+export function isValidCIDv1(inputUrl: string): boolean {
   try {
-    const cid = CID.parse(input, base32);
+    const cid = CID.parse(inputUrl, base32);
     return cid.version === 1;
   } catch (error) {
     return false;

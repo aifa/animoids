@@ -15,11 +15,10 @@ export default function FileUpload() {
   const [message, setMessage] = useState<any>('');
   const [firstPassResultUrl, setFirstPassResultUrl] = useState<string>("");
   const [firstPassResults, setFirstPassResults] = useState<[string, string]>(["",""]);
+  const [firstPassError, setFirstPassError] = useState<boolean>(false); 
   const [isProcessing, setIsProcessing] = useState(false)
   const [processResult, setProcessResult] = useState<string>("")
 
-
-  const [GTP4OnlyFlag, setGTP4OnlyFlag]= useState<string | undefined>(process.env.GPT4_ONLY);
 
   const handleFileSelection = (selectedFile: File) => {
       setFile(selectedFile);
@@ -96,12 +95,19 @@ export default function FileUpload() {
       formData.append('fileType', file.type);
 
       setFirstPassResults(await startScanning(formData));
+      if (firstPassResults[1].toLowerCase().includes("error")){
+        setFirstPassError(true);
+      }else{
+        setFirstPassError(false);
+      }
+
       console.log(firstPassResults);
     } catch (error: any) {
       console.error(`Error: ${error.message}`);
       setProcessResult(`An unexpected error occurred... Please try again later.`);
       setFirstPassResultUrl("Empty");
       setIsProcessing(false);
+      setFirstPassError(true);
     }
 
   }
@@ -109,34 +115,43 @@ export default function FileUpload() {
   const handleDismissResult = () => {
     setProcessResult("")
     setFirstPassResultUrl("")
+    setFirstPassError(false)
   }
 
   //trigget second scan when results from first one are available
   useEffect(() => {
-    if (firstPassResults[0] && firstPassResults[1]) {
-      console.log("first pass results available, starting second scan");
-      if (file===null || file===undefined) {
-        console.error(`Error: File is null`);
-        setProcessResult(`An unexpected error occurred... Please try again later.`);
-        setFirstPassResultUrl("Empty");
-        return ;
-      }
-      setFirstPassResultUrl(firstPassResults[1]); 
-      const v1VidCid = firstPassResults[0];
+    if (firstPassError) {
+      setProcessResult(`A processing error has ooccured. Please try again later...`);
+      setIsProcessing(false);
+      return
+    }else {
+      if (firstPassResults[0] && firstPassResults[1]) {
+        console.log("first pass results available, starting second scan");
 
-      const secform = new FormData();
-      secform.append('v1cID', v1VidCid);
-      secform.append('fileType', file.type);
-      secform.append('resultsUrl', firstPassResults[1]);
-      const scanTrigger = async (secform: FormData) => {
-        const summary = await startSecondScan(secform);
-        console.log(summary);
-        setProcessResult(summary);
-        setIsProcessing(false);
+        if (file===null || file===undefined) {
+          console.error(`Error: File is null`);
+          setProcessResult(`An unexpected error occurred... Please try again later.`);
+          setFirstPassResultUrl("");
+          return ;
+        }
+
+        setFirstPassResultUrl(firstPassResults[1]); 
+        const v1VidCid = firstPassResults[0];
+
+        const secform = new FormData();
+        secform.append('v1cID', v1VidCid);
+        secform.append('fileType', file.type);
+        secform.append('resultsUrl', firstPassResults[1]);
+        const scanTrigger = async (secform: FormData) => {
+          const summary = await startSecondScan(secform);
+          console.log(summary);
+          setProcessResult(summary);
+          setIsProcessing(false);
+        }
+        scanTrigger(secform);
       }
-      scanTrigger(secform);
     }
-  }, [firstPassResults]); // eslint-disable-line react-hooks/exhaustive-deps, 
+  }, [firstPassResults, firstPassError]); // eslint-disable-line react-hooks/exhaustive-deps, 
                           // this needs to run only when first pass results are available
 
   return (

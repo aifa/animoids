@@ -73,7 +73,7 @@ console.log(`submitted job: ${runjobTx.hash}`)
 
  let result = ''
  let i:number = 0;
- while(!result && i < 300) {
+ while(!result && i < 150) {
    result = await dfContract.getJobResult(jobID)
    if(!result) {
     // Use JavaScript to wait or sleep for 1000 milliseconds

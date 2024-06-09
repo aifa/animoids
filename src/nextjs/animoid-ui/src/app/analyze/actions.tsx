@@ -21,10 +21,10 @@ export default async function startScanning(formData: FormData): Promise<[string
   console.log(v1Cid.toString());
   try{
   const scanResults = await firstScan(dirCid, fileType);
-  return [v1Cid.toString(), await firstScan(dirCid, fileType)];
+  return [v1Cid.toString(), scanResults];
   }catch(e:any){
     console.error(`Error: ${e.message}`);
-    return [v1Cid.toString(), `Error: ${e.message}`];
+    throw new Error(`Error: ${e.message}`);
   }
 }
 
@@ -57,28 +57,26 @@ const firstScan = async (dirCid:string, fileType:string): Promise<string> => {
     const isImage = fileType.includes("image"); 
     const isVideo = fileType.includes("video");
 
-    const GTP4OnlyFlag = process.env.GPT4_ONLY;
-    if (!GTP4OnlyFlag) {
-      console.error("Missing GTP4_ONLY in .env");
-      throw new Error("Missing GTP4_ONLY in .env");
-    }
-    if (GTP4OnlyFlag == "true") return "Firts scan bypassed..."
-
     if (isImage) { 
       try{
         const lavaResults = await runDfImageDetection(dirCid);
         console.log(lavaResults);
-        if (!lavaResults || !issValidCIDv0(lavaResults.cid)) throw new Error("Failed to get results from firts scan");
+        if (!lavaResults || !issValidCIDv0(lavaResults)) throw new Error("Failed to get results from firts scan");
         return lavaResults.url+"/outputs/response.json";
       }catch (error: any) {
         console.error(`Error: ${error.message}`);
         throw new Error(`Error: ${error.message}`);
       }
     } else if (isVideo) {
-      const cid = await runDFVideoDetection(dirCid);
-      if (!cid || !issValidCIDv0(cid)) throw new Error("Failed to get results from firts scan...");
-      console.log(cid);
-      return getIpfsGatewayUrl(cid, "outputs/results.csv");
+      try {
+        const cid = await runDFVideoDetection(dirCid);
+        if (!cid || !issValidCIDv0(cid)) throw new Error("Failed to get results from firts scan...");
+        console.log(cid);
+        return getIpfsGatewayUrl(cid, "outputs/results.csv");
+      }catch (error: any) {
+        console.error(`Error: ${error.message}`);
+        throw new Error(`Error: ${error.message}`);
+      }
     }else
     throw new Error("Unsupported file type");
 }
