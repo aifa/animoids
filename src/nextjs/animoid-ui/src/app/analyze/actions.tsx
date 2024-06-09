@@ -19,8 +19,13 @@ export default async function startScanning(formData: FormData): Promise<[string
   const dirCid = await uploadQWithDirWrapAPICall(file);
   const v1Cid = await uploadFile(file);
   console.log(v1Cid.toString());
+  try{
+  const scanResults = await firstScan(dirCid, fileType);
   return [v1Cid.toString(), await firstScan(dirCid, fileType)];
-
+  }catch(e:any){
+    console.error(`Error: ${e.message}`);
+    return [v1Cid.toString(), `Error: ${e.message}`];
+  }
 }
 
 /**
@@ -33,7 +38,13 @@ export async function startSecondScan(formData: FormData): Promise<string> {
   const fileType = formData.get("fileType") as string;
   const resultsUrl = formData.get("resultsUrl") as string;
   console.log("starting second scan()");
-  return await secondScan(v1cID, resultsUrl, fileType);
+  try{
+    const results = await secondPass(v1cID, resultsUrl, fileType);
+    return results;
+  }catch(e:any){
+    console.error(`Error: ${e.message}`);
+    return `Error: ${e.message}`;
+  }
 }
 
 /**
@@ -78,7 +89,7 @@ const firstScan = async (dirCid:string, fileType:string): Promise<string> => {
  * @param fileType 
  * @returns 
  */
-const secondScan = async (v1Cid:string, resultsUrl: string,  fileType:string): Promise<string> => {
+const secondPass = async (v1Cid:string, resultsUrl: string,  fileType:string): Promise<string> => {
     const isImage = fileType.includes("image"); 
     const isVideo = fileType.includes("video");
     const GTP4OnlyFlag = process.env.GPT4_ONLY;
