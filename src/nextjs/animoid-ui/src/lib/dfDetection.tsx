@@ -26,7 +26,7 @@ export const runDfImageDetection = async (dirCid: string) => {
         return data;
     } catch (error: any) {
         console.error(`Error: ${error.message}`);
-        return error;
+        throw new Error(`Error: ${error.message}`);
     }
 }
 
@@ -36,6 +36,6 @@ export const runDFVideoDetection = async (videoFolderCid: string) => {
     }
     catch  (error: any) {
         console.error(`Error: ${error.message}`);
-        return error;
+        throw new Error(`Error: ${error.message}`);
     }
 }

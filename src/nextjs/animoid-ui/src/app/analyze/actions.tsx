@@ -61,7 +61,7 @@ const firstScan = async (dirCid:string, fileType:string): Promise<string> => {
       try{
         const lavaResults = await runDfImageDetection(dirCid);
         console.log(lavaResults);
-        if (!lavaResults || !issValidCIDv0(lavaResults)) throw new Error("Failed to get results from firts scan");
+        if (!lavaResults || !issValidCIDv0(lavaResults)) throw new Error("Failed to get results from first scan");
         return lavaResults.url+"/outputs/response.json";
       }catch (error: any) {
         console.error(`Error: ${error.message}`);
@@ -70,7 +70,7 @@ const firstScan = async (dirCid:string, fileType:string): Promise<string> => {
     } else if (isVideo) {
       try {
         const cid = await runDFVideoDetection(dirCid);
-        if (!cid || !issValidCIDv0(cid)) throw new Error("Failed to get results from firts scan...");
+        if (!cid || !issValidCIDv0(cid)) throw new Error("Failed to get results from first scan...");
         console.log(cid);
         return getIpfsGatewayUrl(cid, "outputs/results.csv");
       }catch (error: any) {
