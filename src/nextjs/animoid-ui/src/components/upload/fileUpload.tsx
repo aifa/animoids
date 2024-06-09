@@ -84,7 +84,14 @@ export default function FileUpload() {
       setIsProcessing(false);
       return;
     }
-    await submitFile(file);
+    try{
+      await submitFile(file);
+    }catch (error: any) {
+      console.error(`Error: ${error.message}`);
+      setFirstPassError(true)
+      setProcessResult(`An unexpected error occurred... Please try again later.`);
+      setIsProcessing(false);
+    }
   };
 
   const submitFile = async (file: File) => {
